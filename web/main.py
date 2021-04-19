@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.templating import Jinja2Templates
 from . import __version__
 
 app = FastAPI(
@@ -9,7 +10,10 @@ app = FastAPI(
     redoc_url=None,
 )
 
+templates = Jinja2Templates(directory="web/templates")
+templates.env.add_extension("jinja2.ext.i18n")
+
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return templates.TemplateResponse("index.html", {})

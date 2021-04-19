@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 uvicorn = {extras = ["standard"], version = "*"}
 fastapi = "*"
+aiofiles = "*"
+jinja2 = "*"
 
 [dev-packages]
 
