@@ -23,6 +23,21 @@ pip install -r requirements.txt
 ## i18n
 使用[Babel]來處理 i18n及L10n。
 
+從源檔集合中提取需要在地化的訊息。
+```
+make babel-extract
+```
+
+基於PO模板檔案創建新的翻譯編目：
+```
+make babel-init locale=en_US
+```
+
+將翻譯編目編譯為二進制MO檔案：
+```
+make babel-compile locale=en_US
+``` 
+
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/
