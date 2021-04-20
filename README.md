@@ -20,8 +20,12 @@ pip install -r requirements.txt
 
 資料庫規劃參見[db_sms_impl]
 
+## i18n
+使用[Babel]來處理 i18n及L10n。
+
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/
 [Uvicorn]: https://www.uvicorn.org/
+[Babel]: http://babel.pocoo.org/
 [db_sms_impl]: https://github.com/ShenTengTu/db_sms_impl
