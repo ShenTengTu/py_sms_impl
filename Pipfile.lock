@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7ca130222920fa410ebe6fef1156c0595cdcd1661fd38934f4f8ddf305247ae9"
+            "sha256": "534edf5460b4263f69337e05e774819554273efa9258fca1ade901595e3c40ed"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,14 @@
             ],
             "index": "pypi",
             "version": "==0.6.0"
+        },
+        "babel": {
+            "hashes": [
+                "sha256:9d35c22fcc79893c3ecc85ac4a56cde1ecf3f19c540bba0922308a6c06ca6fa5",
+                "sha256:da031ab54472314f210b0adcff1588ee5d1d1d0ba4dbd07b94dba82bde791e05"
+            ],
+            "index": "pypi",
+            "version": "==2.9.0"
         },
         "click": {
             "hashes": [
@@ -165,6 +173,13 @@
                 "sha256:49782a97c9d641e8a09ae1d9af0856cc587c8d2474919342d5104d85be9890b2"
             ],
             "version": "==0.17.0"
+        },
+        "pytz": {
+            "hashes": [
+                "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da",
+                "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"
+            ],
+            "version": "==2021.1"
         },
         "pyyaml": {
             "hashes": [

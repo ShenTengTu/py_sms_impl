@@ -8,6 +8,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 fastapi = "*"
 aiofiles = "*"
 jinja2 = "*"
+babel = "*"
 
 [dev-packages]
 
