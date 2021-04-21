@@ -1,7 +1,6 @@
-from gettext import translation
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from . import __version__
+from fastapi.staticfiles import StaticFiles
+from . import __version__, path_static
 from .i18n import (
     load_translations,
     get_translation,
@@ -18,6 +17,7 @@ app = FastAPI(
     docs_url="/api-doc",
     redoc_url=None,
 )
+app.mount("/static", StaticFiles(directory=str(path_static)), name="static")
 
 
 @app.on_event("startup")
@@ -56,5 +56,4 @@ async def parse_client_locale(request: Request, call_next):
 
 @app.get("/")
 async def root(request: Request):
-    # template_translation(get_translation("zh_TW"))
     return template_response("index.html", {"request": request})

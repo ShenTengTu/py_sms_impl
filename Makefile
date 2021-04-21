@@ -3,7 +3,8 @@ LOCALE_DIR=locale
 MO_DOMAIN=py_sms_impl
 POT_FILE=$(LOCALE_DIR)/$(MO_DOMAIN).pot
 
-.PHONY: format babel-extract
+cmd_babel=babel-extract babel-init babel-compile
+.PHONY: format $(cmd_babel) build_tailwind
 
 format:
 	@black ./
@@ -37,5 +38,5 @@ else
 	@echo "Using : 'babel-compile locale=en_US' "
 endif
 
-
-
+build_tailwind:
+	@NODE_ENV=production npx tailwindcss-cli@latest build ./assets/css/tailwind.css -o ./web/static/css/tailwind.css

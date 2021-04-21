@@ -36,11 +36,21 @@ make babel-init locale=en_US
 將翻譯編目編譯為二進制MO檔案：
 ```
 make babel-compile locale=en_US
-``` 
+```
+
+## UI
+使用[Jinja]模板引擎及[Tailwind CSS]框架。
+
+從源檔案構建*tailwind.css*：
+```
+make build_tailwind
+```
 
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/
 [Uvicorn]: https://www.uvicorn.org/
 [Babel]: http://babel.pocoo.org/
+[Jinja]: https://jinja.palletsprojects.com/
+[Tailwind CSS]: https://tailwindcss.com/
 [db_sms_impl]: https://github.com/ShenTengTu/db_sms_impl
