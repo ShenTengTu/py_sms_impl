@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Simple Member System Implementation by Python\n"
+"Language: zh-TW\n"
+
+#: web/templates/index.html:13
+msgid "Simple Member System Implementation"
+msgstr "簡易會員系統實作"
+
+#: web/templates/index.html:16
+msgid "Sign in"
+msgstr "登入"
+
+#: web/templates/index.html:17
+msgid "Sign up"
+msgstr "註冊"
+

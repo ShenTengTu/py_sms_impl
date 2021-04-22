@@ -32,6 +32,7 @@ make babel-extract
 ```
 make babel-init locale=en_US
 ```
+> 此指令為測試用途，本專案使用[POEditor]來管理翻譯編目，並透過API將翻譯好的編目下載到*locale*資料夾。
 
 將翻譯編目編譯為二進制MO檔案：
 ```
@@ -53,4 +54,5 @@ make build_tailwind
 [Babel]: http://babel.pocoo.org/
 [Jinja]: https://jinja.palletsprojects.com/
 [Tailwind CSS]: https://tailwindcss.com/
+[POEditor]: https://poeditor.com/
 [db_sms_impl]: https://github.com/ShenTengTu/db_sms_impl

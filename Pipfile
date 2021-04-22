@@ -11,6 +11,7 @@ jinja2 = "*"
 babel = "*"
 
 [dev-packages]
+poeditor = "*"
 
 [requires]
 python_version = "3.7"
