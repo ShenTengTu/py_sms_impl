@@ -7,7 +7,20 @@
         <link rel="stylesheet" href="{{ url_for('static', path='/css/tailwind.css') }}" />
         <title> </title>
     </head>
-    <body>
-        {{ _("Hello, World!") }}
+    <body class="h-screen grid grid-cols-1 grid-rows-1 bg-gray-200">
+        <header class="flex justify-center items-center">
+            <div class="header-box theme-python">
+                <h1>{{ _("Simple Member System Implementation") }}</h1>
+                <p>by Python</p>
+                <div class="cotainer flex flex-col">
+                    <a class="btn green" href="#">{{ _("Sign in") }}</a>
+                    <a class="btn blue" href="#">{{ _("Sign up") }}</a>
+                </div>
+                <p>
+                    Source code on
+                    <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a>
+                </p>
+            </div>
+        </header>
     </body>
 </html>

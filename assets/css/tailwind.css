@@ -1,4 +1,57 @@
+:root {
+    --color-python: rgba(55, 118, 171, 1);
+}
+
 @tailwind base;
 @tailwind components;
-
 @tailwind utilities;
+
+@layer base {
+    a {
+        @apply underline italic;
+    }
+
+    a.btn.blue {
+        @apply text-blue-50 bg-blue-500 hover:ring-blue-300 focus:ring-blue-300;
+    }
+
+    a.btn.green {
+        @apply text-green-50 bg-green-500 hover:ring-green-300 focus:ring-green-300;
+    }
+
+    .theme-python {
+        @apply bg-python text-blue-100;
+    }
+
+    .theme-python a {
+        @apply text-blue-50;
+    }
+}
+
+@layer components {
+    .btn {
+        @apply block p-4 m-4 rounded-xl font-bold text-center ring-4  ring-transparent transition-shadow;
+    }
+    a.btn {
+        @apply no-underline not-italic;
+    }
+    .header-box {
+        @apply rounded-md w-10/12 p-4 sm:w-auto sm:px-8;
+    }
+    .header-box h1 {
+        @apply text-2xl text-center font-bold max-w-lg;
+    }
+    .header-box p {
+        @apply text-lg text-center;
+    }
+
+    .header-box .cotainer {
+        @apply bg-gray-100 p-2 my-2;
+    }
+}
+
+@layer utilities {
+    .bg-python {
+        background-color: var(--color-python);
+    }
+}

@@ -39,4 +39,6 @@ else
 endif
 
 build_tailwind:
-	@NODE_ENV=production npx tailwindcss-cli@latest build ./assets/css/tailwind.css -o ./web/static/css/tailwind.css
+	@NODE_ENV=production \
+			npx tailwindcss-cli@latest build ./assets/css/tailwind.css \
+			-o ./web/static/css/tailwind.css
