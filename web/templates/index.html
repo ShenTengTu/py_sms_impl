@@ -13,13 +13,17 @@
                 <h1>{{ _("Simple Member System Implementation") }}</h1>
                 <p>by Python</p>
                 <div class="cotainer flex flex-col">
-                    <a class="btn green" href="#">{{ _("Sign in") }}</a>
-                    <a class="btn blue" href="#">{{ _("Sign up") }}</a>
+                    {% if endpoint_name == "root" %}
+                    <a class="btn green" href="{{ url_for('sign_in') }}">{{ _("Sign in") }}</a>
+                    <a class="btn blue" href="{{ url_for('sign_up') }}">{{ _("Sign up") }}</a>
+                    {% elif endpoint_name == "sign_up" %}
+                    <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
+                    {% elif endpoint_name == "sign_in" %}
+                    <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
+                    {% endif %}
                 </div>
-                <p>
-                    Source code on
-                    <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a>
-                </p>
+                <p><a href="{{ url_for('swagger_ui_html') }}">{{ _("API document") }}</a></p>
+                <p>Source code on <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a></p>
             </div>
         </header>
     </body>

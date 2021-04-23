@@ -12,7 +12,10 @@ from .tmpl import template_response, template_translation, template_context
 
 app = FastAPI(
     title="Simple Member System Implementation by FastAPI",
-    description="Simple Member System Implementation (source: https://github.com/ShenTengTu/py_sms_impl) .",
+    description=(
+        "Simple Member System Implementation "
+        "(source: https://github.com/ShenTengTu/py_sms_impl) ."
+    ),
     version=__version__,
     docs_url="/api-doc",
     redoc_url=None,
@@ -56,5 +59,14 @@ async def parse_client_locale(request: Request, call_next):
 
 @app.get("/")
 async def root(request: Request):
-    print(request.scope["endpoint"])
+    return template_response("index.html", template_context(request))
+
+
+@app.get("/sign-up")
+async def sign_up(request: Request):
+    return template_response("index.html", template_context(request))
+
+
+@app.get("/sign-in")
+async def sign_in(request: Request):
     return template_response("index.html", template_context(request))

@@ -46,7 +46,7 @@ def parse_accept_language(data: str = None):
 
     Returns a tuple like below:
     ```
-    ((1.0, Locale('zh', territory='TW', script='Hant')), (0.9, Locale('zh')), (0.8, Locale('en')), (0.0,  _fallback_ns))
+    ((1.0, Locale('zh_Hant_TW')), (0.9, Locale('en')), (0.0,  _fallback_ns))
     ```
     """
     langs = {(0.0, _fallback_ns)}
