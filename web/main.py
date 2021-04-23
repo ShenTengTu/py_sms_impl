@@ -7,7 +7,7 @@ from .i18n import (
     is_babel_translation,
     parse_accept_language,
 )
-from .tmpl import template_response, template_translation
+from .tmpl import template_response, template_translation, template_context
 
 
 app = FastAPI(
@@ -56,4 +56,5 @@ async def parse_client_locale(request: Request, call_next):
 
 @app.get("/")
 async def root(request: Request):
-    return template_response("index.html", {"request": request})
+    print(request.scope["endpoint"])
+    return template_response("index.html", template_context(request))
