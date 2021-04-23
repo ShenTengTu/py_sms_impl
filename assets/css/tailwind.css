@@ -36,17 +36,18 @@
         @apply no-underline not-italic;
     }
     .header-box {
-        @apply rounded-md w-11/12 p-6 sm:max-w-xl;
+        @apply rounded-md w-11/12 p-6 my-4 sm:max-w-xl text-lg text-center;
     }
     .header-box h1 {
         @apply text-2xl text-center font-bold max-w-lg;
     }
-    .header-box p {
-        @apply text-lg text-center;
-    }
 
     .header-box .cotainer {
-        @apply bg-gray-100 p-2 my-2 flex flex-col items-center;
+        @apply bg-gray-100 p-2 my-2 flex flex-col items-center text-left text-gray-500;
+    }
+
+    .header-box .cotainer h2 {
+        @apply text-xl text-center font-bold text-gray-600;
     }
 
     .header-box .cotainer .btn {
