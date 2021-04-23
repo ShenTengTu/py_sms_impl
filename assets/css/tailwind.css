@@ -36,7 +36,7 @@
         @apply no-underline not-italic;
     }
     .header-box {
-        @apply rounded-md w-10/12 p-4 sm:w-auto sm:px-8;
+        @apply rounded-md w-11/12 p-6 sm:max-w-xl;
     }
     .header-box h1 {
         @apply text-2xl text-center font-bold max-w-lg;
@@ -46,7 +46,11 @@
     }
 
     .header-box .cotainer {
-        @apply bg-gray-100 p-2 my-2;
+        @apply bg-gray-100 p-2 my-2 flex flex-col items-center;
+    }
+
+    .header-box .cotainer .btn {
+        @apply w-40;
     }
 }
 
