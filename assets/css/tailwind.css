@@ -26,11 +26,42 @@
     .theme-python a {
         @apply text-blue-50;
     }
+
+    form {
+        @apply grid justify-items-center;
+    }
+
+    form label {
+        @apply block;
+    }
+
+    [type="text"],
+    [type="email"],
+    [type="password"] {
+        @apply block bg-gray-200 px-2 py-1 rounded-sm border-2 border-gray-400;
+        @apply appearance-none;
+    }
+
+    [type="text"]:focus,
+    [type="email"]:focus,
+    [type="password"]:focus {
+        @apply ring-blue-400 ring-2 ring-offset-white ring-offset-0;
+        @apply outline-none;
+    }
+
+    input::placeholder {
+        @apply text-gray-500;
+    }
+
+    [type="submit"].btn {
+        @apply text-yellow-50 bg-yellow-500 hover:ring-yellow-300 focus:ring-yellow-300;
+    }
 }
 
 @layer components {
     .btn {
-        @apply block p-4 m-4 rounded-xl font-bold text-center ring-4  ring-transparent transition-shadow;
+        @apply block p-4 m-4 rounded-xl font-bold text-center ring-4 ring-transparent;
+        @apply transition-shadow focus:outline-none;
     }
     a.btn {
         @apply no-underline not-italic;
@@ -43,11 +74,11 @@
     }
 
     .header-box .cotainer {
-        @apply bg-gray-100 p-2 my-2 flex flex-col items-center text-left text-gray-500;
+        @apply bg-gray-300 p-2 my-2 flex flex-col items-center text-left text-gray-700;
     }
 
     .header-box .cotainer h2 {
-        @apply text-xl text-center font-bold text-gray-600;
+        @apply text-xl text-center font-bold text-gray-800;
     }
 
     .header-box .cotainer .btn {
