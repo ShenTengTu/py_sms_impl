@@ -4,6 +4,7 @@ from . import __version__, path_static
 from .i18n import load_translations
 from .middleware import setup_middleware
 from .tmpl import template_response, template_context, TemplateResponseClass
+from .routers import setup_router
 
 
 app = FastAPI(
@@ -25,6 +26,7 @@ async def startup_event():
 
 
 setup_middleware(app)
+setup_router(app)
 
 
 @app.get("/", response_class=TemplateResponseClass)
