@@ -3,7 +3,7 @@ from . import APIRouter
 
 
 def setup(namesapce: str = "user", prefix: str = "/user"):
-    router = APIRouter(prefix=prefix).namespace(namesapce)
+    router = APIRouter(prefix=prefix, tags=["User"]).namespace(namesapce)
 
     @router.post("/form-sign-up")
     async def form_sign_up(request: Request):

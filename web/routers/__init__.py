@@ -28,3 +28,15 @@ def setup_router(app: FastAPI, namespace: str = "api", prefix: str = "/api"):
     router = APIRouter(prefix=prefix).namespace(namespace)
     router.include_router(user.setup())
     app.include_router(router)
+
+
+tags_metadata = [
+    {
+        "name": "Page",
+        "description": "HTML pages",
+    },
+    {
+        "name": "User",
+        "description": "Operations about user.",
+    },
+]
