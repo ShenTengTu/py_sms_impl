@@ -9,7 +9,7 @@ _fallback_ns = "_fallback"
 
 
 def load_translations(*locales: str, domain=None):
-    """ Loads all translation of locales, fallback translation is first locale"""
+    """Loads all translation of locales, fallback translation is first locale"""
     loc_ins = None
     for loc in reversed(locales):
         try:
