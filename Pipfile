@@ -9,9 +9,13 @@ fastapi = "*"
 aiofiles = "*"
 jinja2 = "*"
 babel = "*"
+itsdangerous = "==2.0.0rc2"
 
 [dev-packages]
 poeditor = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

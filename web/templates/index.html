@@ -31,6 +31,7 @@
                             <span>{{ _("Password:") }}</span>
                             <input type="password" name="" />
                         </label>
+                        {{ csrf_field }}
                         <input class="btn green" type="submit" value="{{ _('Submit') }}" />
                     </form>
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
@@ -45,6 +46,7 @@
                             <span>{{ _("Password:") }}</span>
                             <input type="password" name="" />
                         </label>
+                        {{ csrf_field }}
                         <input class="btn green" type="submit" value="{{ _('Submit') }}" />
                     </form>
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>

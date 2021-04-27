@@ -34,9 +34,9 @@ async def root(request: Request):
 
 @app.get("/sign-up")
 async def sign_up(request: Request):
-    return template_response("index.html", template_context(request))
+    return template_response("index.html", template_context(request, form_csrf=True))
 
 
 @app.get("/sign-in")
 async def sign_in(request: Request):
-    return template_response("index.html", template_context(request))
+    return template_response("index.html", template_context(request, form_csrf=True))

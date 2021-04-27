@@ -1,3 +1,4 @@
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi import FastAPI, Request
 from .i18n import (
     get_translation,
@@ -5,10 +6,13 @@ from .i18n import (
     parse_accept_language,
 )
 from .tmpl import template_translation
+from .settings import get_settings
 
 
 def setup_middleware(app: FastAPI):
     """Setup all middlewares"""
+
+    settings = get_settings()
 
     @app.middleware("http")
     async def observe_request_state(request: Request, call_next):
@@ -35,3 +39,10 @@ def setup_middleware(app: FastAPI):
         )
         response = await call_next(request)
         return response
+
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.secret_key.get_secret_value(),
+        max_age=3600,
+        same_site="strict",
+    )

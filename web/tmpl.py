@@ -1,7 +1,10 @@
 from starlette.routing import get_name
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
+from jinja2 import Markup
 from . import path_templates
+from .csrf import setup_crsf
+from .settings import get_settings
 
 
 _templates = Jinja2Templates(directory=str(path_templates))
@@ -16,8 +19,16 @@ def template_translation(translation):
     env.install_gettext_translations(translation)
 
 
-def template_context(request: Request, **entries):
-    context = {"request": request, "endpoint_name": get_name(request.scope["endpoint"])}
+def template_context(request: Request, form_csrf=False, **entries):
+    settings = get_settings()
+    context = {}
+    if form_csrf:
+        tmpl = '<input type="hidden" name="%s" value="%s">'
+        ns = form_csrf if type(form_csrf) is str else "form-csrf-token"
+        token = setup_crsf(request, settings.secret_key.get_secret_value(), ns)
+        context["csrf_field"] = Markup(tmpl % (ns, token))
+
+    context.update(request=request, endpoint_name=get_name(request.scope["endpoint"]))
 
     for key, value in entries:
         context.setdefault(key, value)
