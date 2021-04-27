@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from . import __version__, path_static
 from .i18n import load_translations
 from .middleware import setup_middleware
-from .tmpl import template_response, template_context
+from .tmpl import template_response, template_context, TemplateResponseClass
 
 
 app = FastAPI(
@@ -27,16 +27,16 @@ async def startup_event():
 setup_middleware(app)
 
 
-@app.get("/")
+@app.get("/", response_class=TemplateResponseClass)
 async def root(request: Request):
     return template_response("index.html", template_context(request))
 
 
-@app.get("/sign-up")
+@app.get("/sign-up", response_class=TemplateResponseClass)
 async def sign_up(request: Request):
     return template_response("index.html", template_context(request, form_csrf=True))
 
 
-@app.get("/sign-in")
+@app.get("/sign-in", response_class=TemplateResponseClass)
 async def sign_in(request: Request):
     return template_response("index.html", template_context(request, form_csrf=True))

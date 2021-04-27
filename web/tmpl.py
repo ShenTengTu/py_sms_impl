@@ -1,4 +1,5 @@
 from starlette.routing import get_name
+from starlette.templating import _TemplateResponse
 from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from jinja2 import Markup
@@ -11,6 +12,7 @@ _templates = Jinja2Templates(directory=str(path_templates))
 _templates.env.add_extension("jinja2.ext.i18n")
 
 template_response = _templates.TemplateResponse
+TemplateResponseClass = _TemplateResponse
 
 
 def template_translation(translation):
