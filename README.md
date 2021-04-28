@@ -50,6 +50,8 @@ make build_tailwind
 ## CSRF保護
 遵循[CSRF Prevention Cheat Sheet]實作CSRF保護機制。
 
+當提交表單而CSRF token過期時會重定向至首頁。
+
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/

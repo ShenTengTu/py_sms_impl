@@ -6,6 +6,7 @@ from .i18n import load_translations
 from .middleware import setup_middleware
 from .tmpl import template_response, template_context, TemplateResponseClass
 from .routers import setup_router, tags_metadata
+from .exception import setup_exception_handler
 
 
 app = FastAPI(
@@ -27,6 +28,7 @@ async def startup_event():
     load_translations("en_US", "zh_TW", domain="py_sms_impl")
 
 
+setup_exception_handler(app)
 setup_middleware(app)
 setup_router(app)
 

@@ -3,9 +3,8 @@ import hashlib
 import hmac
 from functools import lru_cache
 from urllib.parse import urlparse, ParseResult
-from pydantic.errors import SetMinLengthError
 from starlette.datastructures import URL
-from fastapi import Request, Form
+from fastapi import Request, HTTPException
 from itsdangerous import URLSafeTimedSerializer, BadData, SignatureExpired
 from .settings import get_settings
 
@@ -31,6 +30,11 @@ def setup_crsf(request: Request, secret_key: str, namespace: str):
     return _crsf_token(secret_key, session[namespace], namespace)
 
 
+class CSRFTokenExpired(HTTPException):
+    def __init__(self, message: str):
+        super(HTTPException, self).__init__(400, detail=message)
+
+
 class _CSRFValidator:
     """FastAPI dependency class for verifying CSRF Token."""
 
@@ -54,24 +58,32 @@ class _CSRFValidator:
         host = headers.get("host")
         if host:
             if not self._verify_origin(urlparse("//%s" % host), url, host=True):
-                raise Exception("Not same origin.")
+                raise HTTPException(
+                    status_code=403, detail="The request isn't from the same origin."
+                )
 
         host = headers.get("x-forwarded-host")
         if host:
             if not self._verify_origin(urlparse("//%s" % host), url, host=True):
-                raise Exception("Not same origin.")
+                raise HTTPException(
+                    status_code=403, detail="The request isn't from the same origin."
+                )
 
         origin = headers.get("origin")
         if not origin:
-            raise Exception("Header `origin` is missing.")
+            raise HTTPException(status_code=400, detail="Header `origin` is missing.")
         if not self._verify_origin(urlparse(origin), url):
-            raise Exception("Not same origin.")
+            raise HTTPException(
+                status_code=403, detail="The request isn't from the same origin."
+            )
 
         referer = headers.get("referer")
         if not referer:
-            raise Exception("Header `referer` is missing.")
+            raise HTTPException(status_code=400, detail="Header `referer` is missing.")
         if not self._verify_origin(urlparse(referer), url):
-            raise Exception("Not same origin.")
+            raise HTTPException(
+                status_code=403, detail="The request isn't from the same origin."
+            )
 
         # Verify token
         form_data = await request.form()
@@ -79,19 +91,19 @@ class _CSRFValidator:
         if not token:
             token = request.headers.get("x-csrf-token")
         if not token:
-            raise Exception("The CSRF token is missing.")
+            raise HTTPException(status_code=400, detail="The CSRF token is missing.")
 
         try:
             raw_token = _load_crsf_token(
                 self.secret_key.get_secret_value(), token, self.namespace, self.time_limit
             )
         except SignatureExpired:
-            raise Exception("The CSRF token has expired.")
+            raise CSRFTokenExpired("The CSRF token has expired.")
         except BadData:
-            raise Exception("The CSRF token is invalid.")
+            HTTPException(status_code=400, detail="The CSRF token is invalid.")
 
         if not hmac.compare_digest(request.session[self.namespace], raw_token):
-            raise Exception("The CSRF tokens do not match.")
+            raise HTTPException(status_code=400, detail="The CSRF token is invalid.")
 
         return request
 

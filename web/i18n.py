@@ -1,4 +1,3 @@
-from pathlib import Path
 from babel.core import Locale
 from babel.support import Translations, NullTranslations
 from . import path_locale
