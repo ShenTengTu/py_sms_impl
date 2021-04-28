@@ -6,4 +6,9 @@ files="*.{yml,yaml}"
 [overrides.options]
 tabWidth=2
 
+[[overrides]]
+files="*.html"
+[overrides.options]
+printWidth=108
+
 

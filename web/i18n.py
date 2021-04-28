@@ -1,6 +1,6 @@
-from pathlib import Path
 from babel.core import Locale
 from babel.support import Translations, NullTranslations
+from . import path_locale
 
 
 _translations_dict = {None: NullTranslations()}
@@ -8,15 +8,14 @@ _fallback_ns = "_fallback"
 
 
 def load_translations(*locales: str, domain=None):
-    """ Loads all translation of locales, fallback translation is first locale"""
-    path_ocale = Path(__file__).parent / "../locale"
+    """Loads all translation of locales, fallback translation is first locale"""
     loc_ins = None
     for loc in reversed(locales):
         try:
             loc_ins = Locale.parse(loc)
         except:
             continue
-        _translations_dict[loc_ins] = Translations.load(path_ocale, loc_ins, domain)
+        _translations_dict[loc_ins] = Translations.load(path_locale, loc_ins, domain)
     _translations_dict[_fallback_ns] = _translations_dict[loc_ins]
 
 
@@ -46,7 +45,7 @@ def parse_accept_language(data: str = None):
 
     Returns a tuple like below:
     ```
-    ((1.0, Locale('zh', territory='TW', script='Hant')), (0.9, Locale('zh')), (0.8, Locale('en')), (0.0,  _fallback_ns))
+    ((1.0, Locale('zh_Hant_TW')), (0.9, Locale('en')), (0.0,  _fallback_ns))
     ```
     """
     langs = {(0.0, _fallback_ns)}

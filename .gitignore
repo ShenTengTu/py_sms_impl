@@ -1,2 +1,6 @@
 .vscode
 *.mo
+poediter.json
+*.env
+*.env.*
+!*.env.example

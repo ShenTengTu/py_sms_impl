@@ -1,23 +1,26 @@
-from gettext import translation
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from . import __version__
-from .i18n import (
-    load_translations,
-    get_translation,
-    is_babel_translation,
-    parse_accept_language,
-)
-from .tmpl import template_response, template_translation
+from fastapi.staticfiles import StaticFiles
+from fastapi.routing import APIRoute
+from . import __version__, path_static
+from .i18n import load_translations
+from .middleware import setup_middleware
+from .tmpl import template_response, template_context, TemplateResponseClass
+from .routers import setup_router, tags_metadata
+from .exception import setup_exception_handler
 
 
 app = FastAPI(
     title="Simple Member System Implementation by FastAPI",
-    description="Simple Member System Implementation (source: https://github.com/ShenTengTu/py_sms_impl) .",
+    description=(
+        "Simple Member System Implementation "
+        "(source: https://github.com/ShenTengTu/py_sms_impl) ."
+    ),
     version=__version__,
     docs_url="/api-doc",
     redoc_url=None,
+    openapi_tags=tags_metadata,
 )
+app.mount("/static", StaticFiles(directory=str(path_static)), name="static")
 
 
 @app.on_event("startup")
@@ -25,36 +28,27 @@ async def startup_event():
     load_translations("en_US", "zh_TW", domain="py_sms_impl")
 
 
-@app.middleware("http")
-async def observe_request_state(request: Request, call_next):
-    print(request.state._state)
-    response = await call_next(request)
-    return response
+setup_exception_handler(app)
+setup_middleware(app)
+setup_router(app)
 
 
-@app.middleware("http")
-async def update_translation(request: Request, call_next):
-    trans = get_translation(None)  # null translation
-    for _, locale in request.state.accept_language:
-        trans = get_translation(locale)
-        if is_babel_translation(trans):
-            break
-    template_translation(trans)
-    response = await call_next(request)
-    return response
-
-
-@app.middleware("http")
-async def parse_client_locale(request: Request, call_next):
-    # get locale from HTTP header `Accept-Language`
-    request.state.accept_language = parse_accept_language(
-        request.headers["accept-language"]
-    )
-    response = await call_next(request)
-    return response
-
-
-@app.get("/")
+@app.get("/", tags=["Page"], response_class=TemplateResponseClass)
 async def root(request: Request):
-    # template_translation(get_translation("zh_TW"))
-    return template_response("index.html", {"request": request})
+    return template_response("index.html", template_context(request))
+
+
+@app.get("/sign-up", tags=["Page"], response_class=TemplateResponseClass)
+async def sign_up(request: Request):
+    return template_response("index.html", template_context(request, form_csrf=True))
+
+
+@app.get("/sign-in", tags=["Page"], response_class=TemplateResponseClass)
+async def sign_in(request: Request):
+    return template_response("index.html", template_context(request, form_csrf=True))
+
+
+for route in app.routes:
+    if isinstance(route, APIRoute):
+        if not route.operation_id == route.name:
+            route.operation_id = route.name

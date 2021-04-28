@@ -4,9 +4,58 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/tailwind.css') }}" />
         <title> </title>
     </head>
-    <body>
-        {{ _("Hello, World!") }}
+    <body class="min-h-screen grid grid-cols-1 grid-rows-1 bg-gray-200">
+        <header class="flex justify-center items-center">
+            <div class="header-box theme-python">
+                <h1>{{ _("Simple Member System Implementation") }}</h1>
+                <p>by Python</p>
+                <div class="cotainer">
+                    {% if endpoint_name == "root" %}
+                    <a class="btn green" href="{{ url_for('sign_in') }}">{{ _("Sign in") }}</a>
+                    <a class="btn blue" href="{{ url_for('sign_up') }}">{{ _("Sign up") }}</a>
+                    {% elif endpoint_name == "sign_up" %}
+                    <h2>{{ _("Sign up") }}</h2>
+                    <form autocomplete="off" action="{{ url_for('api.user.form.sign_up') }}" method="post">
+                        <label>
+                            <span>{{ _("User ID:") }}</span>
+                            <input type="text" name="user_id" placeholder="[a-zA-Z0-9_-]" />
+                        </label>
+                        <label>
+                            <span>{{ _("E-mail:") }}</span>
+                            <input type="email" name="email" placeholder="your@email.com" />
+                        </label>
+                        <label>
+                            <span>{{ _("Password:") }}</span>
+                            <input type="password" name="password" />
+                        </label>
+                        {{ csrf_field }}
+                        <input class="btn green" type="submit" value="{{ _('Submit') }}" />
+                    </form>
+                    <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
+                    {% elif endpoint_name == "sign_in" %}
+                    <h2>{{ _("Sign in") }}</h2>
+                    <form autocomplete="off" action="{{ url_for('api.user.form.sign_in') }}" method="post">
+                        <label>
+                            <span>{{ _("E-mail:") }}</span>
+                            <input type="email" name="email" placeholder="your@email.com" />
+                        </label>
+                        <label>
+                            <span>{{ _("Password:") }}</span>
+                            <input type="password" name="password" />
+                        </label>
+                        {{ csrf_field }}
+                        <input class="btn green" type="submit" value="{{ _('Submit') }}" />
+                    </form>
+                    <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
+                    {% endif %}
+                </div>
+                <div class="cotainer">{% include 'statement.html' %}</div>
+                <p><a href="{{ url_for('swagger_ui_html') }}">{{ _("API document") }}</a></p>
+                <p>Source code on <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a></p>
+            </div>
+        </header>
     </body>
 </html>
