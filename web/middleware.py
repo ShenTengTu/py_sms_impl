@@ -43,6 +43,6 @@ def setup_middleware(app: FastAPI):
     app.add_middleware(
         SessionMiddleware,
         secret_key=settings.secret_key.get_secret_value(),
-        max_age=3600,
+        max_age=settings.max_age,
         same_site="strict",
     )

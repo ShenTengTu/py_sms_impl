@@ -47,6 +47,9 @@ make babel-compile locale=en_US
 make build_tailwind
 ```
 
+## CSRF保護
+遵循[CSRF Prevention Cheat Sheet]實作CSRF保護機制。
+
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/
@@ -55,4 +58,5 @@ make build_tailwind
 [Jinja]: https://jinja.palletsprojects.com/
 [Tailwind CSS]: https://tailwindcss.com/
 [POEditor]: https://poeditor.com/
+[CSRF Prevention Cheat Sheet]: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
 [db_sms_impl]: https://github.com/ShenTengTu/db_sms_impl

@@ -18,18 +18,18 @@
                     <a class="btn blue" href="{{ url_for('sign_up') }}">{{ _("Sign up") }}</a>
                     {% elif endpoint_name == "sign_up" %}
                     <h2>{{ _("Sign up") }}</h2>
-                    <form action="{{ url_for('api.user.form_sign_up') }}" method="post">
+                    <form action="{{ url_for('api.user.form.sign_up') }}" method="post">
                         <label>
                             <span>{{ _("User ID:") }}</span>
-                            <input type="text" name="" placeholder="[a-zA-Z0-9_-]" />
+                            <input type="text" name="user_id" placeholder="[a-zA-Z0-9_-]" />
                         </label>
                         <label>
                             <span>{{ _("E-mail:") }}</span>
-                            <input type="email" name="" placeholder="your@email.com" />
+                            <input type="email" name="email" placeholder="your@email.com" />
                         </label>
                         <label>
                             <span>{{ _("Password:") }}</span>
-                            <input type="password" name="" />
+                            <input type="password" name="password" />
                         </label>
                         {{ csrf_field }}
                         <input class="btn green" type="submit" value="{{ _('Submit') }}" />
@@ -37,14 +37,14 @@
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
                     {% elif endpoint_name == "sign_in" %}
                     <h2>{{ _("Sign in") }}</h2>
-                    <form action="{{ url_for('api.user.form_sign_in') }}" method="post">
+                    <form action="{{ url_for('api.user.form.sign_in') }}" method="post">
                         <label>
                             <span>{{ _("E-mail:") }}</span>
-                            <input type="email" name="" placeholder="your@email.com" />
+                            <input type="email" name="email" placeholder="your@email.com" />
                         </label>
                         <label>
                             <span>{{ _("Password:") }}</span>
-                            <input type="password" name="" />
+                            <input type="password" name="password" />
                         </label>
                         {{ csrf_field }}
                         <input class="btn green" type="submit" value="{{ _('Submit') }}" />

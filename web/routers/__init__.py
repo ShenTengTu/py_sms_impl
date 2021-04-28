@@ -1,5 +1,7 @@
 from starlette.routing import get_name
-from fastapi import FastAPI, APIRouter as _APIRouter
+from fastapi import FastAPI, APIRouter as _APIRouter, Depends
+from ..csrf import csrf_validator
+from ..settings import get_settings
 
 
 class APIRouter(_APIRouter):
@@ -30,6 +32,15 @@ def setup_router(app: FastAPI, namespace: str = "api", prefix: str = "/api"):
     app.include_router(router)
 
 
+def new_form_router():
+    settings = get_settings()
+    return APIRouter(
+        prefix="/form",
+        dependencies=[Depends(csrf_validator(time_limit=settings.max_age))],
+        tags=["Form"],
+    ).namespace("form")
+
+
 tags_metadata = [
     {
         "name": "Page",
@@ -38,5 +49,9 @@ tags_metadata = [
     {
         "name": "User",
         "description": "Operations about user.",
+    },
+    {
+        "name": "Form",
+        "description": "Operations about form.",
     },
 ]

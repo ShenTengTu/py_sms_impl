@@ -1,16 +1,18 @@
 from fastapi import Request
-from . import APIRouter
+from . import APIRouter, new_form_router
 
 
 def setup(namesapce: str = "user", prefix: str = "/user"):
     router = APIRouter(prefix=prefix, tags=["User"]).namespace(namesapce)
+    form_router = new_form_router()
 
-    @router.post("/form-sign-up")
-    async def form_sign_up(request: Request):
+    @form_router.post("/sign-up")
+    async def sign_up(request: Request):
         return request.session
 
-    @router.post("/form-sign-in")
-    async def form_sign_in(request: Request):
+    @form_router.post("/sign-in")
+    async def sign_in(request: Request):
         return request.session
 
+    router.include_router(form_router)
     return router
