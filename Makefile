@@ -4,7 +4,7 @@ MO_DOMAIN=py_sms_impl
 POT_FILE=$(LOCALE_DIR)/$(MO_DOMAIN).pot
 
 cmd_babel=babel-extract babel-init babel-compile
-.PHONY: format $(cmd_babel) build_tailwind dl_po test
+.PHONY: format $(cmd_babel) build_tailwind dl_po test dev_server
 
 format:
 	@black ./
@@ -44,7 +44,10 @@ build_tailwind:
 			-o ./web/static/css/tailwind.css
 
 dl_po:
-	@pipenv run python script/download_po.py
+	@pipenv run dl_po
 
 test:
-	@pipenv run pytest
+	@pipenv run test
+
+dev_server:
+	@pipenv run dev_server

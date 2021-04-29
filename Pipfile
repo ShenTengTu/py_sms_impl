@@ -21,3 +21,8 @@ python_version = "3.7"
 
 [pipenv]
 allow_prereleases = true
+
+[scripts]
+test="pytest"
+dev_server="uvicorn web.main:app --reload"
+dl_po="python script/download_po.py"
