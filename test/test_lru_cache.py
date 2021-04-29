@@ -1,5 +1,5 @@
 from web.settings import get_settings
-from web.csrf import crsf_serializer, csrf_provider, csrf_validator
+from web.csrf import crsf_serializer, csrf_provider, csrf_validator, DEFAULT_CSRF_NS
 
 
 def test_lru_cache():
@@ -7,9 +7,8 @@ def test_lru_cache():
     s2 = get_settings()
     assert id(s1) == id(s2)
 
-    ns = "form-csrf-token"
-    cs1 = crsf_serializer(s1.secret_key.get_secret_value(), ns)
-    cs2 = crsf_serializer(s2.secret_key.get_secret_value(), ns)
+    cs1 = crsf_serializer(s1.secret_key.get_secret_value(), DEFAULT_CSRF_NS)
+    cs2 = crsf_serializer(s2.secret_key.get_secret_value(), DEFAULT_CSRF_NS)
     assert id(cs1) == id(cs2)
 
     cp1 = csrf_provider()

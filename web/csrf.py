@@ -8,6 +8,8 @@ from fastapi import Request, HTTPException
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from .settings import get_settings
 
+DEFAULT_CSRF_NS = "form-csrf-token"
+
 
 def _token_digest():
     return hashlib.blake2b(os.urandom(64)).hexdigest()
@@ -140,10 +142,10 @@ class _CSRFValidator:
 
 
 @lru_cache()
-def csrf_provider(namespace: str = "form-csrf-token"):
+def csrf_provider(namespace: str = DEFAULT_CSRF_NS):
     return _CSRFProvider(namespace)
 
 
 @lru_cache()
-def csrf_validator(namespace: str = "form-csrf-token", time_limit: int = 14 * 24 * 60 * 60):
+def csrf_validator(namespace: str = DEFAULT_CSRF_NS, time_limit: int = 14 * 24 * 60 * 60):
     return _CSRFValidator(namespace, time_limit)
