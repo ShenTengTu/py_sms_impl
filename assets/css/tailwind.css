@@ -35,6 +35,12 @@
         @apply block;
     }
 
+    form label > span.required::before {
+        content: "*";
+        color: red;
+        margin-right: 0.2rem;
+    }
+
     [type="text"],
     [type="email"],
     [type="password"] {
@@ -47,6 +53,12 @@
     [type="password"]:focus {
         @apply ring-blue-400 ring-2 ring-offset-white ring-offset-0;
         @apply outline-none;
+    }
+
+    [type="text"]:focus:invalid,
+    [type="email"]:focus:invalid,
+    [type="password"]:focus:invalid {
+        @apply bg-red-200;
     }
 
     input::placeholder {

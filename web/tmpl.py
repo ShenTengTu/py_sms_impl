@@ -25,7 +25,12 @@ def template_context(request: Request, form_csrf: tuple = None, **entries):
         tmpl = '<input type="hidden" name="%s" value="%s">'
         context["csrf_field"] = Markup(tmpl % form_csrf)
 
-    context.update(request=request, endpoint_name=get_name(request.scope["endpoint"]))
+    context.update(
+        request=request,
+        endpoint_name=get_name(request.scope["endpoint"]),
+        regex_user="^[a-zA-Z]([_-]?[a-zA-Z0-9]+)+$",
+        regex_password="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9@#$%^&+=*.\-_]){8,}$",
+    )
 
     for key, value in entries:
         context.setdefault(key, value)

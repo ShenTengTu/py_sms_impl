@@ -580,6 +580,12 @@ form label {
     display: block;
 }
 
+form label > span.required::before {
+    content: "*";
+    color: red;
+    margin-right: 0.2rem;
+}
+
 [type="text"],
 [type="email"],
 [type="password"] {
@@ -624,6 +630,13 @@ form label {
 [type="password"]:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
+}
+
+[type="text"]:focus:invalid,
+[type="email"]:focus:invalid,
+[type="password"]:focus:invalid {
+    --tw-bg-opacity: 1;
+    background-color: rgba(254, 202, 202, var(--tw-bg-opacity));
 }
 
 input::-moz-placeholder {
