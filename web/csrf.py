@@ -5,7 +5,7 @@ from functools import lru_cache
 from urllib.parse import urlparse, ParseResult
 from starlette.datastructures import URL
 from fastapi import Request, HTTPException
-from itsdangerous import URLSafeTimedSerializer, BadData, SignatureExpired
+from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from .settings import get_settings
 
 
@@ -13,14 +13,17 @@ def _token_digest():
     return hashlib.blake2b(os.urandom(64)).hexdigest()
 
 
+@lru_cache()
+def crsf_serializer(secret_key: str, namespace: str):
+    return URLSafeTimedSerializer(secret_key, salt=namespace)
+
+
 def _crsf_token(secret_key: str, token_digest: str, namespace: str):
-    return URLSafeTimedSerializer(secret_key, salt=namespace).dumps(token_digest)
+    return crsf_serializer(secret_key, namespace).dumps(token_digest)
 
 
 def _load_crsf_token(secret_key: str, data: str, namespace: str, time_limit: int):
-    return URLSafeTimedSerializer(secret_key, salt=namespace).loads(
-        data, max_age=time_limit
-    )
+    return crsf_serializer(secret_key, namespace).loads(data, max_age=time_limit)
 
 
 def setup_crsf(request: Request, secret_key: str, namespace: str):
@@ -33,6 +36,25 @@ def setup_crsf(request: Request, secret_key: str, namespace: str):
 class CSRFTokenExpired(HTTPException):
     def __init__(self, message: str):
         super(HTTPException, self).__init__(400, detail=message)
+
+
+class BadCSRFToken(HTTPException):
+    def __init__(self, message: str):
+        super(HTTPException, self).__init__(400, detail=message)
+
+
+def verify_crsf(
+    request: Request, secret_key: str, token: str, namespace: str, time_limit: int
+):
+    try:
+        raw_token = _load_crsf_token(secret_key, token, namespace, time_limit)
+    except SignatureExpired:
+        raise CSRFTokenExpired("The CSRF token has expired.")
+    except BadSignature:
+        raise BadCSRFToken("The CSRF token is invalid.")
+
+    if not hmac.compare_digest(request.session[namespace], raw_token):
+        raise BadCSRFToken("The CSRF token is invalid.")
 
 
 class _CSRFValidator:
@@ -93,17 +115,13 @@ class _CSRFValidator:
         if not token:
             raise HTTPException(status_code=400, detail="The CSRF token is missing.")
 
-        try:
-            raw_token = _load_crsf_token(
-                self.secret_key.get_secret_value(), token, self.namespace, self.time_limit
-            )
-        except SignatureExpired:
-            raise CSRFTokenExpired("The CSRF token has expired.")
-        except BadData:
-            HTTPException(status_code=400, detail="The CSRF token is invalid.")
-
-        if not hmac.compare_digest(request.session[self.namespace], raw_token):
-            raise HTTPException(status_code=400, detail="The CSRF token is invalid.")
+        verify_crsf(
+            request,
+            self.secret_key.get_secret_value(),
+            token,
+            self.namespace,
+            self.time_limit,
+        )
 
         return request
 
