@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.routing import APIRoute
 from . import __version__, path_static
@@ -7,6 +7,7 @@ from .middleware import setup_middleware
 from .tmpl import template_response, template_context, TemplateResponseClass
 from .routers import setup_router, tags_metadata
 from .exception import setup_exception_handler
+from .csrf import csrf_provider
 
 
 app = FastAPI(
@@ -39,13 +40,13 @@ async def root(request: Request):
 
 
 @app.get("/sign-up", tags=["Page"], response_class=TemplateResponseClass)
-async def sign_up(request: Request):
-    return template_response("index.html", template_context(request, form_csrf=True))
+async def sign_up(request: Request, csrf: tuple = Depends(csrf_provider())):
+    return template_response("index.html", template_context(request, form_csrf=csrf))
 
 
 @app.get("/sign-in", tags=["Page"], response_class=TemplateResponseClass)
-async def sign_in(request: Request):
-    return template_response("index.html", template_context(request, form_csrf=True))
+async def sign_in(request: Request, csrf: tuple = Depends(csrf_provider())):
+    return template_response("index.html", template_context(request, form_csrf=csrf))
 
 
 for route in app.routes:

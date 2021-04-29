@@ -57,6 +57,19 @@ def verify_crsf(
         raise BadCSRFToken("The CSRF token is invalid.")
 
 
+class _CSRFProvider:
+    """FastAPI dependency class for providing CSRF Token."""
+
+    def __init__(self, namespace: str):
+        self.namespace = namespace
+        self.secret_key = get_settings().secret_key
+
+    async def __call__(self, request: Request):
+        ns = self.namespace
+        token = setup_crsf(request, self.secret_key.get_secret_value(), ns)
+        return (ns, token)
+
+
 class _CSRFValidator:
     """FastAPI dependency class for verifying CSRF Token."""
 
@@ -124,6 +137,11 @@ class _CSRFValidator:
         )
 
         return request
+
+
+@lru_cache()
+def csrf_provider(namespace: str = "form-csrf-token"):
+    return _CSRFProvider(namespace)
 
 
 @lru_cache()
