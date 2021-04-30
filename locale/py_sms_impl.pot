@@ -9,24 +9,80 @@ msgid ""
 msgstr ""
 "Project-Id-Version: py_sms_impl 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-04-22 15:21+0800\n"
+"POT-Creation-Date: 2021-04-30 14:34+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.9.0\n"
+"Generated-By: Babel 2.9.1\n"
 
 #: web/templates/index.html:13
 msgid "Simple Member System Implementation"
 msgstr ""
 
-#: web/templates/index.html:16
+#: web/templates/index.html:19 web/templates/index.html:34
 msgid "Sign in"
 msgstr ""
 
-#: web/templates/index.html:17
+#: web/templates/index.html:20 web/templates/index.html:22
 msgid "Sign up"
+msgstr ""
+
+#: web/templates/index.html:32 web/templates/index.html:40
+msgid "Home"
+msgstr ""
+
+#: web/templates/index.html:44
+msgid "API document"
+msgstr ""
+
+#: web/templates/statement.html:1
+msgid "Important statement"
+msgstr ""
+
+#: web/templates/statement.html:3
+msgid ""
+"This system is for demonstration purposes only, please do not use real "
+"information for registration."
+msgstr ""
+
+#: web/templates/statement.html:4
+msgid ""
+"The e-mails collected by the system are only used to demonstrate the "
+"e-mail verification mechanism."
+msgstr ""
+
+#: web/templates/statement.html:5
+msgid "The system will periodically delete the data in the database."
+msgstr ""
+
+#: web/templates/macros/form.html:4
+msgid "Submit"
+msgstr ""
+
+#: web/templates/macros/form.html:14
+msgid "User ID:"
+msgstr ""
+
+#: web/templates/macros/form.html:27
+msgid "USER_ID_PATTERN_MSG"
+msgstr ""
+
+#: web/templates/macros/form.html:35
+msgid "E-mail:"
+msgstr ""
+
+#: web/templates/macros/form.html:41
+msgid "Password:"
+msgstr ""
+
+#: web/templates/macros/form.html:43
+msgid "Password confirm:"
+msgstr ""
+
+#: web/templates/macros/form.html:55
+msgid "PASSWORD_PATTERN_MSG"
 msgstr ""
 

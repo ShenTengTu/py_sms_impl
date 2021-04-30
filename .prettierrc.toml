@@ -11,4 +11,7 @@ files="*.html"
 [overrides.options]
 printWidth=108
 
-
+[[overrides]]
+files="web/templates/statement.html"
+[overrides.options]
+printWidth=128

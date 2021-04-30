@@ -24,7 +24,7 @@
         pattern="{{regex_user}}"
         minlength="4"
         maxlength="32"
-        data-pattern-mismatch="{{_('Rules of valid user ID format')}}"
+        data-pattern-mismatch="{{_('USER_ID_PATTERN_MSG')}}"
         {%
         endif
         %}
@@ -52,7 +52,7 @@
         %}
         pattern="{{regex_password}}"
         minlength="8"
-        data-pattern-mismatch="{{_('Rules of valid password format')}}"
+        data-pattern-mismatch="{{_('PASSWORD_PATTERN_MSG')}}"
         {%
         endif
         %}
