@@ -4,6 +4,7 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from jinja2 import Markup
 from . import path_templates
+from .settings import constraints
 
 
 _templates = Jinja2Templates(directory=str(path_templates))
@@ -28,8 +29,7 @@ def template_context(request: Request, form_csrf: tuple = None, **entries):
     context.update(
         request=request,
         endpoint_name=get_name(request.scope["endpoint"]),
-        regex_user="^[a-zA-Z]([_-]?[a-zA-Z0-9]+)+$",
-        regex_password="^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9@#$%^&+=*.\-_]){8,}$",
+        constraints=constraints(),
     )
 
     for key, value in entries:

@@ -22,11 +22,13 @@
                     <h2>{{ _("Sign up") }}</h2>
                     {% call form('api.user.form.sign_up') %}
                     <!---->
-                    {{ form_input('user_id', validation=true) }} {{ form_input('email', validation=true) }}
+                    {{ form_input('user_id', validation=true, constraint=constraints.user_id) }}
                     <!---->
-                    {{ form_input('password', validation=true) }}
+                    {{ form_input('email', validation=true) }}
                     <!---->
-                    {{ form_input('password_confirm', validation=true) }}
+                    {{ form_input('password', validation=true, constraint=constraints.password) }}
+                    <!---->
+                    {{ form_input('password_confirm', validation=true, constraint=constraints.password) }}
                     <!---->
                     {% endcall %}
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>

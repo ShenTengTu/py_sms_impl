@@ -11,10 +11,13 @@ jinja2 = "*"
 babel = "*"
 itsdangerous = "==2.0.0rc2"
 python-multipart = "*"
+email-validator = "*"
 
 [dev-packages]
 poeditor = "*"
 pytest = "*"
+pytest-asyncio = "*"
+httpx = "*"
 
 [requires]
 python_version = "3.7"

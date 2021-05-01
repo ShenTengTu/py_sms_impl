@@ -7,7 +7,7 @@
 
 <!---->
 
-{% macro form_input(name, validation=false) -%}
+{% macro form_input(name, validation=false, constraint=None) -%}
 <!---->
 {% if name == "user_id" %}
 <label>
@@ -21,9 +21,9 @@
         if
         validation
         %}
-        pattern="{{regex_user}}"
-        minlength="4"
-        maxlength="32"
+        pattern="{{constraint.regex}}"
+        minlength="{{constraint.min_length}}"
+        maxlength="{{constraint.max_length}}"
         data-pattern-mismatch="{{_('USER_ID_PATTERN_MSG')}}"
         {%
         endif
@@ -50,8 +50,8 @@
         if
         validation
         %}
-        pattern="{{regex_password}}"
-        minlength="8"
+        pattern="{{constraint.regex}}"
+        minlength="{{constraint.min_length}}"
         data-pattern-mismatch="{{_('PASSWORD_PATTERN_MSG')}}"
         {%
         endif
