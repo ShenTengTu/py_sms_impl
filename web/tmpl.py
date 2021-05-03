@@ -4,6 +4,7 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from jinja2 import Markup
 from . import path_templates
+from .settings import constraints
 
 
 _templates = Jinja2Templates(directory=str(path_templates))
@@ -25,7 +26,11 @@ def template_context(request: Request, form_csrf: tuple = None, **entries):
         tmpl = '<input type="hidden" name="%s" value="%s">'
         context["csrf_field"] = Markup(tmpl % form_csrf)
 
-    context.update(request=request, endpoint_name=get_name(request.scope["endpoint"]))
+    context.update(
+        request=request,
+        endpoint_name=get_name(request.scope["endpoint"]),
+        constraints=constraints(),
+    )
 
     for key, value in entries:
         context.setdefault(key, value)

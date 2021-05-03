@@ -76,48 +76,62 @@ class _CSRFValidator:
     """FastAPI dependency class for verifying CSRF Token."""
 
     @staticmethod
-    def _verify_origin(src: ParseResult, target: URL, host=False):
-        result = src.hostname == target.hostname and src.port == target.port
-        if not host:
-            result = result and (src.scheme == target.scheme)
-        return result
+    def _verify_origin(src_url: str, target_url: str):
+        try:
+            src = urlparse(src_url)
+            target = urlparse(target_url)
+            result = (
+                src.scheme == target.scheme
+                and src.hostname == target.hostname
+                and src.port == target.port
+            )
+            return result
+        except ValueError:
+            raise False
 
     def __init__(self, namespace: str, time_limit: int):
         self.namespace = namespace
         self.time_limit = time_limit
-        self.secret_key = get_settings().secret_key
+
+        setting = get_settings()
+        self.secret_key = setting.secret_key
+        self.allowed_hosts = setting.hosts
 
     async def __call__(self, request: Request):
         headers = request.headers
         url = request.url
 
+        # Verify host
+        host = headers.get("x-forwarded-host", headers.get("host"))
+        if not host:
+            host = host = "%s:%s" % request.scope["server"]
+        allowed_hosts = self.allowed_hosts
+        is_valid_host = "*" in allowed_hosts
+        if not is_valid_host:
+            for pattern in allowed_hosts:
+                if host == pattern:
+                    is_valid_host = True
+                    break
+                if pattern.startswith("*") and host.endswith(pattern[1:]):
+                    is_valid_host = True
+                    break
+        if not is_valid_host:
+            raise HTTPException(status_code=403, detail="Invalid host.")
+
         # Verify origin
-        host = headers.get("host")
-        if host:
-            if not self._verify_origin(urlparse("//%s" % host), url, host=True):
-                raise HTTPException(
-                    status_code=403, detail="The request isn't from the same origin."
-                )
-
-        host = headers.get("x-forwarded-host")
-        if host:
-            if not self._verify_origin(urlparse("//%s" % host), url, host=True):
-                raise HTTPException(
-                    status_code=403, detail="The request isn't from the same origin."
-                )
-
         origin = headers.get("origin")
         if not origin:
             raise HTTPException(status_code=400, detail="Header `origin` is missing.")
-        if not self._verify_origin(urlparse(origin), url):
-            raise HTTPException(
-                status_code=403, detail="The request isn't from the same origin."
-            )
+        scheme = "https" if request.scope["scheme"] == "https" else "http"
+        valid_origin = "%s://%s" % (scheme, host)
+        if not self._verify_origin(origin, valid_origin):
+            raise HTTPException(status_code=403, detail="Invalid origin.")
 
+        # Verify referer
         referer = headers.get("referer")
         if not referer:
             raise HTTPException(status_code=400, detail="Header `referer` is missing.")
-        if not self._verify_origin(urlparse(referer), url):
+        if not self._verify_origin(referer, valid_origin):
             raise HTTPException(
                 status_code=403, detail="The request isn't from the same origin."
             )

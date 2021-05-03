@@ -1,0 +1,63 @@
+{% macro form(action_ns) -%}
+<form autocomplete="off" action="{{ url_for(action_ns) }}" method="post">
+    {{ caller() }}{{ csrf_field }}
+    <input class="btn green" type="submit" name="submit" value="{{ _('Submit') }}" />
+</form>
+{%- endmacro %}
+
+<!---->
+
+{% macro form_input(name, validation=false, constraint=None) -%}
+<!---->
+{% if name == "user_id" %}
+<label>
+    <span class="required">{{ _("User ID:") }}</span>
+    <input
+        type="text"
+        name="{{name}}"
+        placeholder="{{name}}"
+        required
+        {%
+        if
+        validation
+        %}
+        pattern="{{constraint.regex}}"
+        minlength="{{constraint.min_length}}"
+        maxlength="{{constraint.max_length}}"
+        data-pattern-mismatch="{{_('USER_ID_PATTERN_MSG')}}"
+        {%
+        endif
+        %}
+    />
+</label>
+{% elif name == "email" %}
+<label>
+    <span class="required">{{ _("E-mail:") }}</span>
+    <input type="email" name="{{name}}" placeholder="your@email.com" required />
+</label>
+{% elif name in ("password", "password_confirm") %}
+<label>
+    {% if name == "password" %}
+    <span class="required">{{ _("Password:") }}</span>
+    {% elif name == "password_confirm" %}
+    <span class="required">{{ _("Password confirm:") }}</span>
+    {% endif %}
+    <input
+        type="password"
+        name="{{name}}"
+        required
+        {%
+        if
+        validation
+        %}
+        pattern="{{constraint.regex}}"
+        minlength="{{constraint.min_length}}"
+        data-pattern-mismatch="{{_('PASSWORD_PATTERN_MSG')}}"
+        {%
+        endif
+        %}
+    />
+</label>
+{% endif %}
+<!---->
+{%- endmacro %}

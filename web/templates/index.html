@@ -13,42 +13,32 @@
                 <h1>{{ _("Simple Member System Implementation") }}</h1>
                 <p>by Python</p>
                 <div class="cotainer">
+                    {% from 'macros/form.html' import form, form_input with context %}
+                    <!---->
                     {% if endpoint_name == "root" %}
                     <a class="btn green" href="{{ url_for('sign_in') }}">{{ _("Sign in") }}</a>
                     <a class="btn blue" href="{{ url_for('sign_up') }}">{{ _("Sign up") }}</a>
                     {% elif endpoint_name == "sign_up" %}
                     <h2>{{ _("Sign up") }}</h2>
-                    <form autocomplete="off" action="{{ url_for('api.user.form.sign_up') }}" method="post">
-                        <label>
-                            <span>{{ _("User ID:") }}</span>
-                            <input type="text" name="user_id" placeholder="[a-zA-Z0-9_-]" />
-                        </label>
-                        <label>
-                            <span>{{ _("E-mail:") }}</span>
-                            <input type="email" name="email" placeholder="your@email.com" />
-                        </label>
-                        <label>
-                            <span>{{ _("Password:") }}</span>
-                            <input type="password" name="password" />
-                        </label>
-                        {{ csrf_field }}
-                        <input class="btn green" type="submit" value="{{ _('Submit') }}" />
-                    </form>
+                    {% call form('api.user.form.sign_up') %}
+                    <!---->
+                    {{ form_input('user_id', validation=true, constraint=constraints.user_id) }}
+                    <!---->
+                    {{ form_input('email', validation=true) }}
+                    <!---->
+                    {{ form_input('password', validation=true, constraint=constraints.password) }}
+                    <!---->
+                    {{ form_input('password_confirm', validation=true, constraint=constraints.password) }}
+                    <!---->
+                    {% endcall %}
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
                     {% elif endpoint_name == "sign_in" %}
                     <h2>{{ _("Sign in") }}</h2>
-                    <form autocomplete="off" action="{{ url_for('api.user.form.sign_in') }}" method="post">
-                        <label>
-                            <span>{{ _("E-mail:") }}</span>
-                            <input type="email" name="email" placeholder="your@email.com" />
-                        </label>
-                        <label>
-                            <span>{{ _("Password:") }}</span>
-                            <input type="password" name="password" />
-                        </label>
-                        {{ csrf_field }}
-                        <input class="btn green" type="submit" value="{{ _('Submit') }}" />
-                    </form>
+                    {% call form('api.user.form.sign_in') %}
+                    <!---->
+                    {{ form_input('email') }} {{ form_input('password') }}
+                    <!---->
+                    {% endcall %}
                     <a class="btn blue" href="{{ url_for('root') }}">{{ _("Home") }}</a>
                     {% endif %}
                 </div>
@@ -57,5 +47,37 @@
                 <p>Source code on <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a></p>
             </div>
         </header>
+        {% if endpoint_name == "sign_up" %}
+        <script>
+            (() => {
+                function input_listener(event) {
+                    el = event.target;
+                    el.setCustomValidity("");
+                    if (el.name == "password_confirm" && el.form.password.value != el.value) {
+                        el.setCustomValidity(el.dataset.patternMismatch);
+                    }
+                    el.checkValidity();
+                }
+
+                function invalid_listener(event) {
+                    el = event.target;
+                    if (el.validity.patternMismatch) {
+                        el.setCustomValidity(el.dataset.patternMismatch);
+                    }
+                }
+
+                const form = document.getElementsByTagName("form")[0];
+
+                form.elements.user_id.addEventListener("input", input_listener);
+                form.elements.user_id.addEventListener("invalid", invalid_listener);
+                form.elements.password.addEventListener("input", input_listener);
+                form.elements.password.addEventListener("invalid", invalid_listener);
+                form.elements.password_confirm.addEventListener("input", input_listener);
+                form.elements.password_confirm.addEventListener("invalid", invalid_listener);
+                form.elements.submit.addEventListener("mouseenter", () => form.reportValidity());
+                form.elements.submit.addEventListener("focus", () => form.reportValidity());
+            })();
+        </script>
+        {% endif %}
     </body>
 </html>

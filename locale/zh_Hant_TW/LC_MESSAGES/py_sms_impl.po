@@ -11,11 +11,63 @@ msgstr ""
 msgid "Simple Member System Implementation"
 msgstr "簡易會員系統實作"
 
-#: web/templates/index.html:16
+#: web/templates/index.html:19 web/templates/index.html:34
 msgid "Sign in"
 msgstr "登入"
 
-#: web/templates/index.html:17
+#: web/templates/index.html:20 web/templates/index.html:22
 msgid "Sign up"
 msgstr "註冊"
+
+#: web/templates/index.html:32 web/templates/index.html:40
+msgid "Home"
+msgstr "首頁"
+
+#: web/templates/index.html:44
+msgid "API document"
+msgstr "API文檔"
+
+#: web/templates/statement.html:1
+msgid "Important statement"
+msgstr "重要聲明"
+
+#: web/templates/statement.html:3
+msgid "This system is for demonstration purposes only, please do not use real information for registration."
+msgstr "此系統僅用於演示用途，請勿使用真實訊息進行註冊。"
+
+#: web/templates/statement.html:4
+msgid "The e-mails collected by the system are only used to demonstrate the e-mail verification mechanism."
+msgstr "系統收集的電子郵件僅用於演示電子郵件驗證機制。"
+
+#: web/templates/statement.html:5
+msgid "The system will periodically delete the data in the database."
+msgstr "系統將定期刪除資料庫中的資料。"
+
+#: web/templates/macros/form.html:4
+msgid "Submit"
+msgstr "提交"
+
+#: web/templates/macros/form.html:14
+msgid "User ID:"
+msgstr "使用者ID："
+
+#: web/templates/macros/form.html:27
+msgid "USER_ID_PATTERN_MSG"
+msgstr "包含字母，數字，下劃線和連字符； 以字母開頭，結尾不帶下劃線或連字符； 下劃線或連字符只能在字母和數字之間。"
+
+#: web/templates/macros/form.html:35
+msgid "E-mail:"
+msgstr "電子郵件："
+
+#: web/templates/macros/form.html:41
+msgid "Password:"
+msgstr "密碼："
+
+#: web/templates/macros/form.html:43
+msgid "Password confirm:"
+msgstr "密碼確認："
+
+#: web/templates/macros/form.html:55
+msgid "PASSWORD_PATTERN_MSG"
+msgstr "包含字母，數字和@#$%^&+=*.-_符號； 至少一個字母和一個數字。"
 
