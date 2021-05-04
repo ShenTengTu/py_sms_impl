@@ -12,6 +12,8 @@ babel = "*"
 itsdangerous = "==2.0.0rc2"
 python-multipart = "*"
 email-validator = "*"
+pip = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
 
 [dev-packages]
 poeditor = "*"
