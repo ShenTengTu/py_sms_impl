@@ -1,15 +1,17 @@
 from typing import Tuple
 from functools import lru_cache
-from pydantic import BaseSettings, SecretStr, BaseModel
+from pydantic import BaseSettings, SecretStr, BaseModel, PostgresDsn
 
 
 class _Settings(BaseSettings):
     secret_key: SecretStr
+    csrf_secret_key: SecretStr
     max_age: int = 3600
     hosts: Tuple[str, ...] = ("localhost", "127.0.0.1")
     origins: Tuple[str, ...] = tuple()
     origin_regex: str = r"^http://(localhost|127.0.0.1)(:\d{2,5})?$"
     http_meothds: Tuple[str, ...] = ("GET", "OPTIONS", "POST")
+    # sql_db_url:PostgresDsn
 
     class Config:
         env_file = ".env"

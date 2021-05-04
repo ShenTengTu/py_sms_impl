@@ -2,8 +2,7 @@ import os
 import hashlib
 import hmac
 from functools import lru_cache
-from urllib.parse import urlparse, ParseResult
-from starlette.datastructures import URL
+from urllib.parse import urlparse
 from fastapi import Request, HTTPException
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 from .settings import get_settings
@@ -64,7 +63,7 @@ class _CSRFProvider:
 
     def __init__(self, namespace: str):
         self.namespace = namespace
-        self.secret_key = get_settings().secret_key
+        self.secret_key = get_settings().csrf_secret_key
 
     async def __call__(self, request: Request):
         ns = self.namespace
@@ -94,7 +93,7 @@ class _CSRFValidator:
         self.time_limit = time_limit
 
         setting = get_settings()
-        self.secret_key = setting.secret_key
+        self.secret_key = setting.csrf_secret_key
         self.allowed_hosts = setting.hosts
 
     async def __call__(self, request: Request):
