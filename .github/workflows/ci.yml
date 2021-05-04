@@ -44,5 +44,3 @@ jobs:
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
           command: run test
-        env:
-          SECRET_KEY: secret_for_testing
