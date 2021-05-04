@@ -16,7 +16,7 @@ class TestSignUp:
     async def mock_browse_page(self, async_client: AsyncClient):
         # fetch csrf token
         resp = await async_client.get("/sign-up")
-        print("\n")
+
         for line in resp.iter_lines():
             l = line.strip()
             flag = 'name="form-csrf-token" value='

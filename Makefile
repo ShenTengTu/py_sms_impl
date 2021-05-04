@@ -51,3 +51,9 @@ test:
 
 dev_server:
 	@pipenv run dev_server
+
+dump_sql_shema:
+	@pipenv run python setup.py dump_sql_schema \
+			--scheme postgresql \
+			--driver psycopg2 \
+			-o ./init_db/pg_init_db.sql
