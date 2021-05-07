@@ -38,16 +38,27 @@ def main():
     else:
         name = ns.output.name
         if name == ".env":
+            envs = ("SECRET_KEY", "CSRF_SECRET_KEY")
             if not ns.output.exists():
                 with ns.output.open("w") as fp:
-                    fp.write("SECRET_KEY='%s'" % key)
-            with ns.output.open("r+") as fp:
-                s = fp.read()
-                s = re.sub(
-                    r"^SECRET_KEY=.+$", "SECRET_KEY='%s'" % key, s, flags=re.MULTILINE
-                )
-                fp.seek(0)
-                fp.write(s)
+                    for env in envs:
+                        key = mk_key(
+                            ns.length, ns.least_lower, ns.least_upper, ns.least_digits
+                        )
+
+                        fp.write("%s='%s'\n" % (env, key))
+            else:
+                with ns.output.open("r+") as fp:
+                    s = fp.read()
+                    for env in envs:
+                        key = mk_key(
+                            ns.length, ns.least_lower, ns.least_upper, ns.least_digits
+                        )
+                        s = re.sub(
+                            r"^%s=.+$" % env, "%s='%s'" % (env, key), s, flags=re.MULTILINE
+                        )
+                    fp.seek(0)
+                    fp.write(s)
         else:
             with ns.output.open("w") as fp:
                 fp.write(key)

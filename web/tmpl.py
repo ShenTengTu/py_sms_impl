@@ -4,7 +4,7 @@ from fastapi import Request
 from fastapi.templating import Jinja2Templates
 from jinja2 import Markup
 from . import path_templates
-from .settings import constraints
+from .schema import constraints
 
 
 _templates = Jinja2Templates(directory=str(path_templates))

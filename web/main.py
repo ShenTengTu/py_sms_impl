@@ -8,6 +8,8 @@ from .tmpl import template_response, template_context, TemplateResponseClass
 from .routers import setup_router, tags_metadata
 from .exception import setup_exception_handler
 from .csrf import csrf_provider
+from .sql.core import init_db
+from .sql.orm import orm_metadata
 
 
 app = FastAPI(
@@ -27,6 +29,7 @@ app.mount("/static", StaticFiles(directory=str(path_static)), name="static")
 @app.on_event("startup")
 async def startup_event():
     load_translations("en_US", "zh_TW", domain="py_sms_impl")
+    init_db(orm_metadata())
 
 
 setup_exception_handler(app)
