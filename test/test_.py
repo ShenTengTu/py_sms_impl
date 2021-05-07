@@ -13,7 +13,7 @@ def test_setting():
     assert settings.sql_db_url.scheme == "postgresql"
     assert settings.sql_db_url.user == "postgres"
     assert settings.sql_db_url.password == os.environ["SQL_DB_PASSWORD"]
-    assert settings.sql_db_url.host == "localhost"
+    assert settings.sql_db_url.host == os.environ["SQL_DB_HOST"]
     assert settings.sql_db_url.port == "5432"
     assert settings.sql_db_url.path == "/%s" % os.environ["SQL_DB_NAME"]
 

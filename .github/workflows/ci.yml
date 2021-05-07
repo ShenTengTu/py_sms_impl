@@ -32,15 +32,32 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   py-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres_password
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: APT install
+        run: |
+          sudo apt-get update
+          sudo apt-get --yes install python3.7-dev libpq-dev
+      - name: Install pipenv
+        run: pip install pipenv
       - name: "Pipenv : Install dependecies"
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: install -d
+        run: pipenv install -d
       - name: "Pipenv : Run test"
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: run test
+        run: pipenv run test
+        env:
+          SQL_DB_HOST: localhost
+          SQL_DB_NAME: sms_impl
+          SQL_DB_PASSWORD: postgres_password

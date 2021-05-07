@@ -10,10 +10,11 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("CSRF_SECRET_KEY", "test_csrf_secret_key")
     monkeypatch.setenv("MAX_AGE", "600")
     SQL_DB_PASSWORD = os.environ["SQL_DB_PASSWORD"]
+    SQL_DB_HOST = os.environ["SQL_DB_HOST"]
     SQL_DB_NAME = os.environ["SQL_DB_NAME"]
     monkeypatch.setenv(
         "SQL_DB_URL",
-        f"postgresql://postgres:{SQL_DB_PASSWORD}@localhost:5432/{SQL_DB_NAME}",
+        f"postgresql://postgres:{SQL_DB_PASSWORD}@{SQL_DB_HOST}:5432/{SQL_DB_NAME}",
     )
 
 

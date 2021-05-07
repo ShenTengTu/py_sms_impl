@@ -4,3 +4,5 @@ poediter.json
 *.env
 *.env.*
 !*.env.example
+*.secrets
+*.secrets.*
