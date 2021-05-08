@@ -1,4 +1,5 @@
 from functools import lru_cache
+from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy_utils.functions import database_exists, create_database
@@ -24,6 +25,7 @@ def init_db(metadata: MetaData):
     metadata.create_all(bind=engine)
 
 
+@contextmanager
 def db_session():
     """FastAPI dependency genarator for create database session."""
     db: Session = _mk_orm_session()

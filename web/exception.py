@@ -1,6 +1,7 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import RedirectResponse
+from sqlalchemy.exc import SQLAlchemyError
 from .csrf import CSRFTokenExpired
 
 
@@ -18,3 +19,7 @@ def setup_exception_handler(app: FastAPI):
             return RedirectResponse(request.url_for("root"), status_code=303)
         else:
             return await http_exception_handler(request, exc)
+
+    @app.exception_handler(SQLAlchemyError)
+    async def sql_exception_handler(request: Request, exc: SQLAlchemyError):
+        return await http_exception_handler(request, HTTPException(500, detail=exc))

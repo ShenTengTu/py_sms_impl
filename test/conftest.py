@@ -1,6 +1,9 @@
 import os
 import pytest
 from httpx import AsyncClient
+from sqlalchemy_utils import drop_database
+from web.sql.orm import orm_metadata
+from web.settings import get_settings
 
 
 @pytest.fixture(autouse=True)
@@ -25,3 +28,30 @@ def async_client():
     # See `settings.origin_regex` and `settings.hosts`
     origin = "http://localhost"
     return AsyncClient(app=app, base_url=origin, headers={"origin": origin})
+
+
+@pytest.fixture()
+def init_sql_db():
+
+    from web.sql.core import init_db
+
+    def fn():
+        metadata = orm_metadata()
+        init_db(metadata)
+
+    return fn
+
+
+@pytest.fixture()
+def drop_sql_db():
+    def fn():
+        drop_database(get_settings().sql_db_url)
+
+    return fn
+
+
+@pytest.fixture()
+def db_session_generator():
+    from web.sql.core import db_session  # avoid missing value errors when loading settings
+
+    return db_session

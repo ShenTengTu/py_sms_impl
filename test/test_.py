@@ -1,5 +1,6 @@
 # This file must be the first order of testing
 import os
+import pytest
 from web.settings import get_settings
 from web.crypto import crypt_context, crypt_hash, crypt_verify
 from web.sql.orm import dump_schema, orm_metadata
@@ -29,6 +30,15 @@ def test_sql_dump_schema():
     assert dump_schema().count("CREATE TABLE") > 0
 
 
+def test_db_session():
+    from sqlalchemy.exc import ArgumentError
+    from web.sql.core import db_session
+
+    with pytest.raises(ArgumentError):
+        with db_session() as db:
+            db.execute(None)
+
+
 def test_sql_init_db():
     from sqlalchemy import inspect
     from sqlalchemy_utils import database_exists, drop_database
@@ -45,3 +55,5 @@ def test_sql_init_db():
     init_db(metadata)  # should not raise error
 
     drop_database(url)
+    assert not database_exists(url)
+    get_engine().dispose()
