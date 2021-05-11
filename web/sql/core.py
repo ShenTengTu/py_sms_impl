@@ -1,7 +1,7 @@
 from functools import lru_cache
 from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker, Session, close_all_sessions
 from sqlalchemy_utils.functions import database_exists, create_database
 from ..settings import get_settings
 
@@ -23,6 +23,11 @@ def init_db(metadata: MetaData):
     if not database_exists(engine.url):
         create_database(engine.url)
     metadata.create_all(bind=engine)
+
+
+def close_db():
+    close_all_sessions()
+    get_engine().dispose()
 
 
 @contextmanager

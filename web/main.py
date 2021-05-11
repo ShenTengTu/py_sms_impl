@@ -8,7 +8,7 @@ from .tmpl import template_response, template_context, TemplateResponseClass
 from .routers import setup_router, tags_metadata
 from .exception import setup_exception_handler
 from .csrf import csrf_provider
-from .sql.core import init_db
+from .sql.core import init_db, close_db
 from .sql.orm import orm_metadata
 
 
@@ -30,6 +30,11 @@ app.mount("/static", StaticFiles(directory=str(path_static)), name="static")
 async def startup_event():
     load_translations("en_US", "zh_TW", domain="py_sms_impl")
     init_db(orm_metadata())
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    close_db()
 
 
 setup_exception_handler(app)
