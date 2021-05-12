@@ -26,7 +26,11 @@ class MemberORM(_BaseORM):
     email_verified = Column(Boolean, default=False)
     # Relationship
     member_profile = relationship(
-        "MemberProfileORM", back_populates="member", uselist=False
+        "MemberProfileORM",
+        back_populates="member",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
 

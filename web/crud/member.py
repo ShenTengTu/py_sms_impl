@@ -1,42 +1,37 @@
 from datetime import datetime
-from sqlalchemy import exc as sql_exc
 from sqlalchemy.orm import Session
-from ..sql.orm import MemberORM
+from ..sql.orm import MemberORM, MemberProfileORM
 from ..schema.member import SignUpForm
 from ..crypto import crypt_hash
-from . import CRUD, RecordAlreadyExists
+from . import CRUD
 
 
 class Member(CRUD):
     orm = MemberORM
 
     @classmethod
-    def create(cls, db: Session, form_data: SignUpForm):
+    def create(cls, db: Session, *, form_data: SignUpForm):
         orm_ins = cls.orm(
             user_email=form_data.email,
             user_name=form_data.user_id,
             password_hash=crypt_hash(form_data.password),
             rigister_time=datetime.now(),
         )
-        try:
-            db.add(orm_ins)
-            db.commit()
-        except sql_exc.IntegrityError as error:  # violates unique constraint
-            db.rollback()
-            raise RecordAlreadyExists(error.orig)
+        db.add(orm_ins)
+        cls._commit(db)
         db.refresh(orm_ins)
         return orm_ins
 
     @classmethod
-    def read(cls, db: Session, user_name: str):
+    def read(cls, db: Session, *, user_name: str):
         return db.query(cls.orm).filter(cls.orm.user_name == user_name).first()
 
     @classmethod
     def update(
         cls,
         db: Session,
-        user_name: str,
         *,
+        user_name: str,
         password: str = None,
         email_verified: bool = None,
     ) -> int:
@@ -53,5 +48,44 @@ class Member(CRUD):
         return db.query(cls.orm).filter(cls.orm.user_name == user_name).update(d)
 
     @classmethod
-    def delete(cls, db: Session, user_name: str):
+    def delete(cls, db: Session, *, user_name: str):
         return db.query(cls.orm).filter(cls.orm.user_name == user_name).delete()
+
+
+class MemberProfile(CRUD):
+    orm = MemberProfileORM
+
+    @classmethod
+    def create(cls, db: Session, *, member_id: int, display_name: str):
+        orm_ins = cls.orm(member_id=member_id, display_name=display_name)
+        db.add(orm_ins)
+        cls._commit(db)
+        db.refresh(orm_ins)
+        return orm_ins
+
+    @classmethod
+    def read(cls, db: Session, *, member_id: int):
+        return db.query(cls.orm).filter(cls.orm.member_id == member_id).first()
+
+    @classmethod
+    def update(
+        cls,
+        db: Session,
+        *,
+        member_id: int,
+        display_name: str = None,
+        intro: str = None,
+        avatar_path: str = None,
+    ):
+        d = {}
+
+        if type(display_name) is str:
+            d[cls.orm.display_name] = display_name
+        if type(intro) is str:
+            d[cls.orm.intro] = intro
+        if type(avatar_path) is str:
+            d[cls.orm.avatar_path] = avatar_path
+
+        if len(d) == 0:
+            return 0
+        return db.query(cls.orm).filter(cls.orm.member_id == member_id).update(d)
