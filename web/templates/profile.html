@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{{ url_for('static', path='/css/tailwind.css') }}" />
+        <title> </title>
+    </head>
+    <body class="min-h-screen grid grid-cols-1 grid-rows-1 bg-gray-200">
+        <header class="flex justify-center items-center">
+            <div class="header-box theme-python">
+                <h1>{{ _("Simple Member System Implementation") }}</h1>
+                <p>by Python</p>
+                <div class="cotainer">
+                    {% from 'macros/nav_menu.html' import nav_menu with context %} {% call nav_menu() %}
+                    <a class="nav-menu-item" href="{{ url_for('root') }}">{{ _("Home") }}</a>
+                    <a class="nav-menu-item" href="{{ url_for('sign_in') }}">{{ _("Sign in") }}</a>
+                    <a class="nav-menu-item" href="{{ url_for('sign_up') }}">{{ _("Sign up") }}</a>
+                    {% endcall %}
+                    <div>
+                        {% if email_verified %}
+                        <span class="state-tag success">{{ _("Email verified") }}</span>
+                        {% else %}
+                        <span class="state-tag fail">{{ _("Email isn't verified") }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="cotainer">
+                        <div class="cotainer">
+                            <img
+                                class="avatar"
+                                src="{{member_profile.avatar_path}}"
+                                alt
+                                style="height: auto"
+                                width="150"
+                            />
+                        </div>
+                        <h2 class="member-names">
+                            <span class="display-name">{{member_profile.display_name}}</span>
+                            <span class="user-name">{{user_name}}</span>
+                        </h2>
+                        <div class="break-words my-2">
+                            <div>{{member_profile.intro}}</div>
+                        </div>
+                    </div>
+                </div>
+                <p><a href="{{ url_for('swagger_ui_html') }}">{{ _("API document") }}</a></p>
+                <p>Source code on <a href="https://github.com/ShenTengTu/py_sms_impl">GitHub</a></p>
+            </div>
+        </header>
+        {% from 'macros/nav_menu.html' import nav_menu_js %} {{nav_menu_js()}}
+    </body>
+</html>

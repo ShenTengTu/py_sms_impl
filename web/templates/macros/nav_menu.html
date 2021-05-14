@@ -1,0 +1,46 @@
+{% macro nav_menu() -%}
+<div class="nav-hamburger">
+    <input id="nav-menu-toggle" type="checkbox" />
+    <label class="toggle-container" for="nav-menu-toggle">
+        <span class="button-toggle"><div></div></span>
+    </label>
+    <nav class="nav-menu">{{ caller() }}</nav>
+</div>
+{%- endmacro %}
+
+<!---->
+
+{% macro nav_menu_js() -%}
+<script>
+    (() => {
+        function toggle_nav_items_tabindex(bool) {
+            els = document.querySelectorAll(".nav-menu-item");
+            for (let el of els) {
+                if (bool) {
+                    el.removeAttribute("tabindex");
+                } else {
+                    el.setAttribute("tabindex", "-1");
+                }
+            }
+        }
+
+        toggle_nav_items_tabindex(false);
+
+        toggle_el = document.getElementById("nav-menu-toggle");
+        if (toggle_el) {
+            toggle_el.addEventListener("keydown", (e) => {
+                switch (event.key) {
+                    case "Space":
+                    case "Enter":
+                        e.target.checked = !e.target.checked;
+                        toggle_nav_items_tabindex(e.target.checked);
+                        break;
+                    default:
+                        return;
+                }
+                event.preventDefault();
+            });
+        }
+    })();
+</script>
+{%- endmacro %}

@@ -4,7 +4,8 @@ MO_DOMAIN=py_sms_impl
 POT_FILE=$(LOCALE_DIR)/$(MO_DOMAIN).pot
 
 cmd_babel=babel-extract babel-init babel-compile
-.PHONY: format $(cmd_babel) build_tailwind dl_po test dev_server
+cmd_db=dump_sql_shema create_demo_data
+.PHONY: format $(cmd_babel) $(cmd_db) build_tailwind dl_po test dev_server
 
 format:
 	@black ./
@@ -47,13 +48,16 @@ dl_po:
 	@pipenv run dl_po
 
 test:
-	@pipenv run test
+	@PIPENV_DOTENV_LOCATION=.env.test pipenv run test
 
 dev_server:
-	@pipenv run dev_server
+	@PIPENV_DONT_LOAD_ENV=1 pipenv run dev_server
 
 dump_sql_shema:
 	@pipenv run python setup.py dump_sql_schema \
 			--scheme postgresql \
 			--driver psycopg2 \
 			-o ./init_db/pg_init_db.sql
+
+create_demo_data:
+	@PIPENV_DONT_LOAD_ENV=1 pipenv run python setup.py create_demo_data

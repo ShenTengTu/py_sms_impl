@@ -31,11 +31,12 @@ def test_sql_dump_schema():
 
 
 def test_db_session():
+    from contextlib import contextmanager
     from sqlalchemy.exc import ArgumentError
     from web.sql.core import db_session
 
     with pytest.raises(ArgumentError):
-        with db_session() as db:
+        with contextmanager(db_session)() as db:
             db.execute(None)
 
 

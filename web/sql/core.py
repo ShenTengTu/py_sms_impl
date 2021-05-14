@@ -1,5 +1,4 @@
 from functools import lru_cache
-from contextlib import contextmanager
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session, close_all_sessions
 from sqlalchemy_utils.functions import database_exists, create_database
@@ -30,7 +29,6 @@ def close_db():
     get_engine().dispose()
 
 
-@contextmanager
 def db_session():
     """FastAPI dependency genarator for create database session."""
     db: Session = _mk_orm_session()

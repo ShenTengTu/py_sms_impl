@@ -1,6 +1,7 @@
+from gettext import gettext as _
 from babel.core import Locale
 from babel.support import Translations, NullTranslations
-from . import path_locale
+from . import path_locale, E_RedirectReason
 
 
 _translations_dict = {None: NullTranslations()}
@@ -60,3 +61,9 @@ def parse_accept_language(data: str = None):
             q = float(tags[1][2:])
         langs.add((q, loc_ins))
     return tuple(sorted(langs, reverse=True))
+
+
+redirect_reasons = {
+    E_RedirectReason.csrf_expired: _("The verification has expired."),
+    E_RedirectReason.member_exists: _("The member is already registered."),
+}

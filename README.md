@@ -52,6 +52,23 @@ make build_tailwind
 
 當提交表單而CSRF token過期時會重定向至首頁。
 
+## 測試
+執行測試之前，請在本地專案目錄中建立`.env.test`環境變數檔案，並設置下列環境變數：
+- `SQL_DB_PASSWORD`
+- `SQL_DB_HOST`
+- `SQL_DB_NAME`
+
+然後執行全部測試：
+```
+make test
+```
+
+或者執行單項測試：
+```
+PIPENV_DOTENV_LOCATION=.env.test pipenv run pytest -s test/test_.py
+```
+
+
 [FastAPI]: https://fastapi.tiangolo.com/
 [Starlette]: https://www.starlette.io/
 [Pydantic]: https://pydantic-docs.helpmanual.io/

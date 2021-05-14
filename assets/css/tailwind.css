@@ -1,5 +1,5 @@
-:root {
-    --color-python: rgba(55, 118, 171, 1);
+* {
+    --color-python: rgba(55, 118, 171, var(--tw-text-opacity));
 }
 
 @tailwind base;
@@ -9,6 +9,7 @@
 @layer base {
     a {
         @apply underline italic;
+        @apply text-blue-50;
     }
 
     a.btn.blue {
@@ -23,10 +24,6 @@
         @apply bg-python text-blue-100;
     }
 
-    .theme-python a {
-        @apply text-blue-50;
-    }
-
     form {
         @apply grid justify-items-center;
     }
@@ -36,9 +33,7 @@
     }
 
     form label > span.required::before {
-        content: "*";
-        color: red;
-        margin-right: 0.2rem;
+        @apply content-asterisk text-red-500 mr-1;
     }
 
     [type="text"],
@@ -75,7 +70,8 @@
         @apply block p-4 m-4 rounded-xl font-bold text-center ring-4 ring-transparent;
         @apply transition-shadow focus:outline-none;
     }
-    a.btn {
+    a.btn,
+    a.nav-menu-item {
         @apply no-underline not-italic;
     }
     .header-box {
@@ -96,10 +92,159 @@
     .header-box .cotainer .btn {
         @apply w-40;
     }
+
+    .redirect-reason {
+        @apply h-8 whitespace-nowrap text-center text-red-600;
+    }
+
+    .http-status p {
+        @apply m-2 font-mono;
+    }
+
+    .http-status .status-code {
+        @apply text-4xl;
+    }
+
+    .http-status .detail {
+        @apply text-xl;
+    }
+
+    .cotainer .nav-hamburger {
+        @apply w-full;
+    }
+
+    .nav-hamburger {
+        @apply relative flex;
+    }
+
+    #nav-menu-toggle {
+        @apply absolute top-1 left-1 opacity-0;
+    }
+
+    #nav-menu-toggle:focus-visible ~ .toggle-container .button-toggle {
+        @apply outline-browser;
+    }
+
+    #nav-menu-toggle:checked ~ .toggle-container .button-toggle > div {
+        @apply hidden;
+    }
+
+    #nav-menu-toggle:checked ~ .toggle-container .button-toggle::before {
+        @apply top-1/2 transform -translate-y-1/2 rotate-45;
+    }
+
+    #nav-menu-toggle:checked ~ .toggle-container .button-toggle::after {
+        @apply top-1/2 transform -translate-y-1/2 -rotate-45;
+    }
+
+    #nav-menu-toggle:checked ~ .nav-menu {
+        @apply flex-auto mb-1.5 py-2 pointer-events-auto;
+    }
+
+    #nav-menu-toggle:checked ~ .nav-menu .nav-menu-item {
+        @apply flex-auto my-2 overflow-visible leading-inherit;
+    }
+
+    .button-toggle {
+        @apply absolute top-1 left-1 inline-block h-12 w-12 cursor-pointer;
+    }
+
+    .button-toggle > div,
+    .button-toggle:before,
+    .button-toggle:after {
+        @apply absolute left-0 w-full h-1.5 rounded;
+        @apply bg-python;
+    }
+    .button-toggle > div {
+        @apply top-1/2 transform -translate-y-1/2;
+    }
+    .button-toggle:before {
+        @apply content-empty top-1/4;
+        @apply transform -translate-y-1/2 transition-all duration-500;
+    }
+    .button-toggle:after {
+        @apply content-empty bottom-1/4;
+        @apply transform translate-y-1/2 transition-all duration-500;
+    }
+    .nav-menu {
+        @apply flex flex-col items-center flex-initial rounded-md bg-gray-100 h-auto;
+        @apply pointer-events-none transition-all duration-500;
+    }
+    .nav-menu-item {
+        @apply block font-bold text-center flex-initial overflow-hidden leading-0;
+        @apply text-python hover:text-opacity-90;
+    }
+
+    .avatar {
+        @apply inline-block overflow-hidden leading-none align-middle rounded-circle;
+        @flex-shrink-0 apply bg-python;
+    }
+
+    .member-names > span {
+        @apply block;
+    }
+
+    .member-names .display-name {
+        @apply text-2xl overflow-hidden;
+    }
+
+    .member-names .user-name {
+        @apply text-xl font-light;
+    }
+
+    .member-names .user-name::before {
+        @apply content-at mr-0.5;
+    }
+
+    .state-tag {
+        @apply inline-block mx-1.5 my-2 px-1.5 py-2 rounded text-base;
+    }
+
+    .state-tag::after {
+        @apply ml-1 text-lg font-bold;
+    }
+
+    .state-tag.success {
+        @apply text-green-100 bg-green-600;
+    }
+
+    .state-tag.success::after {
+        @apply content-check;
+    }
+
+    .state-tag.fail {
+        @apply text-red-100 bg-red-600;
+    }
+
+    .state-tag.fail::after {
+        @apply content-cross;
+    }
 }
 
 @layer utilities {
     .bg-python {
         background-color: var(--color-python);
+    }
+    .text-python {
+        color: var(--color-python);
+    }
+    .outline-browser {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+    .content-empty {
+        content: "";
+    }
+    .content-asterisk {
+        content: "*";
+    }
+    .content-at {
+        content: "@";
+    }
+    .content-check {
+        content: "\2713\fe0e";
+    }
+    .content-cross {
+        content: "\2717\fe0e";
     }
 }

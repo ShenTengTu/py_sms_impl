@@ -45,11 +45,16 @@ class Member(CRUD):
 
         if len(d) == 0:
             return 0
-        return db.query(cls.orm).filter(cls.orm.user_name == user_name).update(d)
+
+        c = db.query(cls.orm).filter(cls.orm.user_name == user_name).update(d)
+        cls._commit(db)
+        return c
 
     @classmethod
     def delete(cls, db: Session, *, user_name: str):
-        return db.query(cls.orm).filter(cls.orm.user_name == user_name).delete()
+        c = db.query(cls.orm).filter(cls.orm.user_name == user_name).delete()
+        cls._commit(db)
+        return c
 
 
 class MemberProfile(CRUD):
@@ -88,4 +93,6 @@ class MemberProfile(CRUD):
 
         if len(d) == 0:
             return 0
-        return db.query(cls.orm).filter(cls.orm.member_id == member_id).update(d)
+        c = db.query(cls.orm).filter(cls.orm.member_id == member_id).update(d)
+        cls._commit(db)
+        return c

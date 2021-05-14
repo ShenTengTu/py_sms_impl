@@ -1,29 +1,20 @@
 from datetime import datetime
-from typing import cast
 import pytest
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-from sqlalchemy_utils import database_exists
-from web.settings import get_settings
 from web.crypto import crypt_verify
 from web.schema.member import SignUpForm
 from web.crud import RecordAlreadyExists, RelatedRecordNotExist
 from web.crud.member import Member, MemberProfile
 
-form_data = {
-    "user_id": "aB-c0_ef1",
-    "email": "contact@testing.com",
-    "password": "0z12@3456",
-    "password_confirm": "0z12@3456",
-}
 
-
-def test_member_crud(init_sql_db, db_session_generator, drop_sql_db):
+def test_member_crud(
+    init_sql_db, db_session_generator, drop_sql_db, close_db, testing_from_data: dict
+):
     init_sql_db()
-    with db_session_generator() as db:
-        db = cast(Session, db)
 
-        # Create
+    form_data = testing_from_data.copy()
+
+    # Create
+    with db_session_generator() as db:
         orm = Member.create(db, form_data=SignUpForm(**form_data))
         assert orm.member_id == 1
         assert orm.user_email == form_data["email"]
@@ -32,11 +23,13 @@ def test_member_crud(init_sql_db, db_session_generator, drop_sql_db):
         assert type(orm.rigister_time) is datetime
         assert orm.email_verified == False
 
-        # Duplicated creation
+    # Duplicated creation]
+    with db_session_generator() as db:
         with pytest.raises(RecordAlreadyExists):
             Member.create(db, form_data=SignUpForm(**form_data))
 
-        # Read
+    # Read
+    with db_session_generator() as db:
         orm = Member.read(db, user_name=form_data["user_id"])
         assert orm.member_id == 1
         assert orm.user_email == form_data["email"]
@@ -45,33 +38,40 @@ def test_member_crud(init_sql_db, db_session_generator, drop_sql_db):
         assert type(orm.rigister_time) is datetime
         assert orm.email_verified == False
 
-        # Update
+    # Update
+    with db_session_generator() as db:
         new_pw = "0z12@3456X"
         assert 1 == Member.update(
             db, user_name=form_data["user_id"], password=new_pw, email_verified=True
         )
+    with db_session_generator() as db:
         orm = Member.read(db, user_name=form_data["user_id"])
         assert crypt_verify(new_pw, orm.password_hash)
         assert orm.email_verified == True
 
-        # Delete
+    # Delete
+    with db_session_generator() as db:
         assert 1 == Member.delete(db, user_name=form_data["user_id"])
         assert None == Member.read(db, user_name=form_data["user_id"])
 
     drop_sql_db()
-    db.bind.dispose()  # Engine Disposal
+    close_db()  # Engine Disposal
 
 
-def test_member_profile_crud(init_sql_db, db_session_generator, drop_sql_db):
+def test_member_profile_crud(
+    init_sql_db, db_session_generator, drop_sql_db, close_db, testing_from_data: dict
+):
     init_sql_db()
-    with db_session_generator() as db:
-        db = cast(Session, db)
 
-        # The related record in `member` table does not exist
+    form_data = testing_from_data.copy()
+
+    # The related record in `member` table does not exist
+    with db_session_generator() as db:
         with pytest.raises(RelatedRecordNotExist) as exc_info:
             MemberProfile.create(db, member_id=1, display_name="demo_user")
 
-        # Create
+    # Create
+    with db_session_generator() as db:
         member_orm = Member.create(db, form_data=SignUpForm(**form_data))
         # relationship
         assert member_orm.member_profile is None
@@ -86,13 +86,16 @@ def test_member_profile_crud(init_sql_db, db_session_generator, drop_sql_db):
         assert orm is member_orm.member_profile
         assert orm.member is member_orm
 
-        # Duplicated creation
+    # Duplicated creation
+    with db_session_generator() as db:
         with pytest.raises(RecordAlreadyExists):
             MemberProfile.create(
                 db, member_id=member_orm.member_id, display_name=member_orm.user_name
             )
 
-        # Read
+    # Read
+    with db_session_generator() as db:
+        member_orm = Member.read(db, user_name=form_data["user_id"])
         orm = MemberProfile.read(db, member_id=member_orm.member_id)
         assert orm.member_id == member_orm.member_id
         assert orm.display_name == member_orm.user_name
@@ -102,7 +105,17 @@ def test_member_profile_crud(init_sql_db, db_session_generator, drop_sql_db):
         assert orm is member_orm.member_profile
         assert orm.member is member_orm
 
-        # Update
+        # create Pydantic model from ORM
+        from web.schema.member import MemberProfileRead
+
+        MemberProfileRead._default_avatar_path = "/static/avatar.jpg"
+        m = MemberProfileRead.from_orm(member_orm.member_profile)
+        assert m.display_name == orm.display_name
+        assert m.intro == ""
+        assert m.avatar_path == "/static/avatar.jpg"
+
+    # Update
+    with db_session_generator() as db:
         assert 1 == MemberProfile.update(
             db,
             member_id=member_orm.member_id,
@@ -110,18 +123,21 @@ def test_member_profile_crud(init_sql_db, db_session_generator, drop_sql_db):
             intro="Demo User introduction",
             avatar_path="/static/avatar.jpg",
         )
+    with db_session_generator() as db:
         orm = MemberProfile.read(db, member_id=member_orm.member_id)
         assert orm.display_name == "Demo User"
         assert orm.intro == "Demo User introduction"
         assert orm.avatar_path == "/static/avatar.jpg"
 
-        # Must be deleted by parent ORM `Member`
+    # Must be deleted by parent ORM `Member`
+    with db_session_generator() as db:
         with pytest.raises(NotImplementedError):
             MemberProfile.delete(db)
 
-        # Delete
+    # Delete
+    with db_session_generator() as db:
         Member.delete(db, user_name=member_orm.user_name)
         assert None == MemberProfile.read(db, member_id=member_orm.member_id)
 
     drop_sql_db()
-    db.bind.dispose()  # Engine Disposal
+    close_db()  # Engine Disposal
