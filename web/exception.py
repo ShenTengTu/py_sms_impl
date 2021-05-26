@@ -1,6 +1,10 @@
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.exception_handlers import http_exception_handler as _http_exception_handler
+from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import (
+    http_exception_handler as _http_exception_handler,
+    request_validation_exception_handler as _request_validation_exception_handler,
+)
 from fastapi.responses import RedirectResponse
 from sqlalchemy.exc import SQLAlchemyError
 from . import E_RedirectReason as E_RR
@@ -67,6 +71,28 @@ def setup_exception_handler(app: FastAPI):
             template_context(request, http_exc=exc),
             status_code=exc.status_code,
         )
+
+    @app.exception_handler(RequestValidationError)
+    async def request_validation_exception_handler(
+        request: Request, exc: RequestValidationError
+    ):
+        ns = get_endpoint_namespace(request)
+        if ns is None:
+            return await _request_validation_exception_handler(request, exc)
+
+        redirect_ns = None
+        if ns == "api.user.form.sign_up":
+            redirect_ns = "sign_up"
+        elif ns == "api.user.form.sign_in":
+            redirect_ns = "sign_in"
+
+        if redirect_ns is None:
+            return await _request_validation_exception_handler(request, exc)
+
+        # 303 See Other
+        # directing client to get requested resource to another URI with an GET request.
+        request.session["redirect_reason"] = E_RR.invalid_input
+        return RedirectResponse(request.url_for(redirect_ns), status_code=303)
 
 
 def exception_redirect_reason(request: Request):

@@ -13,4 +13,6 @@ path_locale = path_package / "../locale"
 class E_RedirectReason(str, Enum):
     csrf_expired = "1"
     member_exists = "2"
-    sin_up_completed = "3"
+    sign_up_completed = "3"
+    sign_in_completed = "4"
+    invalid_input = "5"
