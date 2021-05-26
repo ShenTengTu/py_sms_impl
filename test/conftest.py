@@ -6,6 +6,7 @@ from sqlalchemy_utils import drop_database
 from web.sql.orm import orm_metadata
 from web.settings import get_settings
 from web.schema.member import SignUpForm
+from web.csrf import DEFAULT_CSRF_NS
 
 
 @pytest.fixture(autouse=True)
@@ -33,30 +34,19 @@ def async_client():
 
 
 @pytest.fixture()
-def init_sql_db():
+def testing_sql_db_contextmanager():
+    from web.sql.core import init_db, close_db
 
-    from web.sql.core import init_db
+    class CM:
+        def __enter__(self):
+            metadata = orm_metadata()
+            init_db(metadata)
 
-    def fn():
-        metadata = orm_metadata()
-        init_db(metadata)
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            drop_database(get_settings().sql_db_url)
+            close_db()
 
-    return fn
-
-
-@pytest.fixture()
-def drop_sql_db():
-    def fn():
-        drop_database(get_settings().sql_db_url)
-
-    return fn
-
-
-@pytest.fixture()
-def close_db():
-    from web.sql.core import close_db
-
-    return close_db
+    return CM
 
 
 @pytest.fixture()
@@ -98,3 +88,23 @@ def demo_member_profile():
             " Aenean consequat eget lacus eget congue placerat."
         ),
     )
+
+
+@pytest.fixture()
+def async_mock_browse_form():
+    async def fn(url: str, async_client: AsyncClient, headers: dict, form_data: dict):
+        # fetch csrf token
+        resp = await async_client.get(url)
+
+        for line in resp.iter_lines():
+            l = line.strip()
+            flag = 'name="form-csrf-token" value='
+            pos = l.find(flag)
+            if pos > 0:
+                token = l[pos + len(flag) :].strip('">')
+                form_data[DEFAULT_CSRF_NS] = token
+                break
+        # mock `referer` header
+        headers.setdefault("referer", str(async_client.base_url.join(url)))
+
+    return fn
