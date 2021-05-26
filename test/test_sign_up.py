@@ -8,18 +8,12 @@ from web.crud.member import Member
 class TestSignUp:
     url = "/api/user/form/sign-up"
     headers = {}
-    form_data = {
-        "user_id": "aB-c0_ef1",
-        "email": "contact@testing.com",
-        "password": "0z12@3456",
-        "password_confirm": "0z12@3456",
-    }
 
     @pytest.mark.asyncio
     async def test_constraint(
-        self, async_client: AsyncClient, testing_from_data: dict, async_mock_browse_form
+        self, async_client: AsyncClient, raw_sign_up_from_data: dict, async_mock_browse_form
     ):
-        form_data = testing_from_data.copy()
+        form_data = raw_sign_up_from_data.copy()
 
         async with async_client as ac:
             await async_mock_browse_form("/sign-up", ac, self.headers, form_data)
@@ -33,14 +27,14 @@ class TestSignUp:
                 resp = await ac.post(self.url, data=invalid_data, headers=self.headers)
                 assert resp.status_code == 200
                 assert resp.url == str(async_client.base_url.join("/sign-up"))
-            invalid_data["user_id"] = self.form_data["user_id"]
+            invalid_data["user_id"] = form_data["user_id"]
 
             # invalid e-ammil
             invalid_data["email"] = "name@host"
             resp = await ac.post(self.url, data=invalid_data, headers=self.headers)
             assert resp.status_code == 200
             assert resp.url == str(async_client.base_url.join("/sign-up"))
-            invalid_data["email"] = self.form_data["email"]
+            invalid_data["email"] = form_data["email"]
 
             # invalid password
             bads = ("abc$defg", "012$3456")
@@ -50,7 +44,7 @@ class TestSignUp:
                 resp = await ac.post(self.url, data=invalid_data, headers=self.headers)
                 assert resp.status_code == 200
                 assert resp.url == str(async_client.base_url.join("/sign-up"))
-            invalid_data["password"] = self.form_data["password"]
+            invalid_data["password"] = form_data["password"]
             # invalid password confirm
             resp = await ac.post(self.url, data=invalid_data, headers=self.headers)
             assert resp.status_code == 200
@@ -87,11 +81,11 @@ class TestSignUp:
         self,
         async_client: AsyncClient,
         testing_sql_db_contextmanager,
-        testing_from_data: dict,
+        raw_sign_up_from_data: dict,
         async_mock_browse_form,
     ):
         with testing_sql_db_contextmanager():
-            form_data = testing_from_data.copy()
+            form_data = raw_sign_up_from_data.copy()
             async with async_client as ac:
                 await async_mock_browse_form("/sign-up", ac, self.headers, form_data)
                 resp = await ac.post(self.url, data=form_data, headers=self.headers)

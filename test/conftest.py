@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from sqlalchemy_utils import drop_database
 from web.sql.orm import orm_metadata
 from web.settings import get_settings
-from web.schema.member import SignUpForm
+from web.schema.member import SignUpForm, SignInForm
 from web.csrf import DEFAULT_CSRF_NS
 
 
@@ -57,12 +57,28 @@ def db_session_generator():
 
 
 @pytest.fixture()
-def testing_from_data():
+def raw_sign_up_from_data():
     return dict(
         user_id="aB-c0_ef1",
         email="contact@testing.com",
         password="0z12@3456",
         password_confirm="0z12@3456",
+    )
+
+
+@pytest.fixture()
+def raw_sign_in_from_data():
+    return dict(
+        email="contact@testing.com",
+        password="0z12@3456",
+    )
+
+
+@pytest.fixture()
+def demo_sign_in_form():
+    return SignInForm(
+        email="contact@demo-member.com",
+        password="demo@678",
     )
 
 

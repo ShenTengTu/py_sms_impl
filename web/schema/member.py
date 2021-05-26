@@ -37,6 +37,15 @@ class SignUpForm(BaseModel):
         return values
 
 
+class SignInForm(BaseModel):
+    email: EmailStr
+    password: str
+
+    @classmethod
+    def parse(cls, email: EmailStr = Form(...), password: str = Form(..., **_c_password)):
+        return cls(email=email, password=password)
+
+
 class MemberProfileRead(BaseModel):
     _default_avatar_path = ""
     display_name: Optional[str] = Field(max_length=64)

@@ -23,8 +23,13 @@ class Member(CRUD):
         return orm_ins
 
     @classmethod
-    def read(cls, db: Session, *, user_name: str):
-        return db.query(cls.orm).filter(cls.orm.user_name == user_name).first()
+    def read(cls, db: Session, *, user_name: str, is_email=False):
+        """Querys a row by `user_name` column.
+        If `is_email` argument is True, querys a row by `user_email` column."""
+        q = db.query(cls.orm)
+        if is_email is True:
+            return q.filter(cls.orm.user_email == user_name).first()
+        return q.filter(cls.orm.user_name == user_name).first()
 
     @classmethod
     def update(

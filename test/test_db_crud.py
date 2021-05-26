@@ -9,11 +9,11 @@ from web.crud.member import Member, MemberProfile
 def test_member_crud(
     testing_sql_db_contextmanager,
     db_session_generator,
-    testing_from_data: dict,
+    raw_sign_up_from_data: dict,
 ):
     with testing_sql_db_contextmanager():
 
-        form_data = testing_from_data.copy()
+        form_data = raw_sign_up_from_data.copy()
 
         # Create
         with db_session_generator() as db:
@@ -60,11 +60,11 @@ def test_member_crud(
 def test_member_profile_crud(
     testing_sql_db_contextmanager,
     db_session_generator,
-    testing_from_data: dict,
+    raw_sign_up_from_data: dict,
 ):
     with testing_sql_db_contextmanager():
 
-        form_data = testing_from_data.copy()
+        form_data = raw_sign_up_from_data.copy()
 
         # The related record in `member` table does not exist
         with db_session_generator() as db:
